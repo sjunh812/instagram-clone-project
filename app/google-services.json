@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "780080544635-qebm4elfoib827mbjih58v7610d0ttvo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.sjhstudio.instagramclone",
+            "certificate_hash": "33b9830aea41f02d7224dd2673a70d140110bb37"
+          }
+        },
+        {
           "client_id": "780080544635-f8smsau36d79qj66vqqnur66n2njhsd3.apps.googleusercontent.com",
           "client_type": 3
         }

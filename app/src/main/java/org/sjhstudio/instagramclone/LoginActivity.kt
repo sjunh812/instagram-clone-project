@@ -2,18 +2,26 @@ package org.sjhstudio.instagramclone
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import org.sjhstudio.instagramclone.databinding.ActivityLoginBinding
 import java.lang.Exception
 
 class LoginActivity: BaseActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+
     private var auth: FirebaseAuth? = null
+    private var googleSignInClient: GoogleSignInClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,10 +31,30 @@ class LoginActivity: BaseActivity() {
         binding.signBtn.setOnClickListener {
             signInAndSignUp()
         }
+
+        binding.googleLoginBtn.setOnClickListener {
+            googleLogin()
+        }
     }
 
     /**
-     * Firebase sign-in and sign-up
+     * Google sign-in
+     */
+    private fun googleLogin() {
+        // first. make GoogleSignInClient using GoogleSignInOptions
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        // second. request signInIntent and set firebase auth using result
+        val signInIntent = googleSignInClient?.signInIntent
+        googleSignInResult.launch(signInIntent)
+    }
+
+    /**
+     * Firebase auth sign-in and sign-up
      */
     fun signInAndSignUp() {
         try {
@@ -52,7 +80,7 @@ class LoginActivity: BaseActivity() {
     }
 
     /**
-     * Firebase signIn
+     * Firebase auth sign-in
      */
     fun signIn() {
         auth?.signInWithEmailAndPassword(binding.emailEt.text.toString().trim(), binding.pwEt.text.toString())
@@ -67,7 +95,43 @@ class LoginActivity: BaseActivity() {
             }
     }
 
-    fun moveMainActivity(user: FirebaseUser?) {
+    /**
+     * Firebase auth sign-in with credential
+     * (with Google)
+     */
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
+        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+        auth?.signInWithCredential(credential)
+            ?.addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    // Login(Google)
+                    moveMainActivity(task.result?.user)
+                } else {
+                    // Error
+                    Snackbar.make(binding.signBtn, task.exception?.message ?: "구글로그인 에러", 1000).show()
+                }
+            }
+    }
+
+    private val googleSignInResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { ar ->
+        println("xxx googleSignInResult!! : ${ar.resultCode}")
+        if(ar.resultCode == RESULT_OK) {
+            ar.data?.let {
+                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(it)
+                result?.let { r ->
+                    if(r.isSuccess) {
+                        firebaseAuthWithGoogle(r.signInAccount)
+                    }
+                }
+            }
+        } else {
+            println("xxx googleSignInResult error")
+        }
+    }
+
+    private fun moveMainActivity(user: FirebaseUser?) {
         if(user != null) {
             startActivity(Intent(this,MainActivity::class.java))
             finish()

@@ -2,6 +2,7 @@
     <string name="app_name">Instagram Clone</string>
     <string name="facebook_app_id">873009302900995</string>
     <string name="fb_login_protocol_scheme">fb873009302900995</string>
+    <string name="google_client_id">780080544635-f8smsau36d79qj66vqqnur66n2njhsd3.apps.googleusercontent.com</string>
     <!--  Sign In  -->
     <string name="email">Email</string>
     <string name="password">Password</string>
