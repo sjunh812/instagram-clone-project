@@ -4,15 +4,22 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import org.sjhstudio.instagramclone.MyApplication.Companion.auth
 import org.sjhstudio.instagramclone.databinding.ActivityLoginBinding
 import java.lang.Exception
 
@@ -20,37 +27,59 @@ class LoginActivity: BaseActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
-    private var auth: FirebaseAuth? = null
-    private var googleSignInClient: GoogleSignInClient? = null
+    private var googleSignInClient: GoogleSignInClient? = null  // google
+    private var callbackManager: CallbackManager? = null    // facebook
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-        auth = FirebaseAuth.getInstance()
 
-        binding.signBtn.setOnClickListener {
-            signInAndSignUp()
-        }
+        // Facebook callback
+        callbackManager = CallbackManager.Factory.create()
 
-        binding.googleLoginBtn.setOnClickListener {
-            googleLogin()
-        }
+        // listener
+        binding.signBtn.setOnClickListener { signInAndSignUp() }
+        binding.googleLoginBtn.setOnClickListener { googleLogin() }
+        binding.facebookLoginBtn.setOnClickListener { facebookLogin() }
     }
 
     /**
      * Google sign-in
      */
     private fun googleLogin() {
-        // first. make GoogleSignInClient using GoogleSignInOptions
+        // First. make GoogleSignInClient using GoogleSignInOptions
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.google_client_id))
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // second. request signInIntent and set firebase auth using result
+        // Second. request signInIntent and set firebase auth using result
         val signInIntent = googleSignInClient?.signInIntent
         googleSignInResult.launch(signInIntent)
+    }
+
+    /**
+     * Facebook sign-in
+     */
+    private fun facebookLogin() {
+        callbackManager?.let { cm ->
+            LoginManager.getInstance().logInWithReadPermissions(
+                this,
+                cm,
+                listOf("email", "public_profile")
+            )
+            LoginManager.getInstance().registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult) {
+                    println("xxx FacebookCallback : onSuccess()")
+                    handleFacebookAccessToken(result.accessToken)
+                }
+
+                override fun onCancel() { println("xxx FacebookCallback : onCancel()") }
+
+                override fun onError(error: FacebookException) { println("xxx FacebookCallback : onError()") }
+            })
+        }
     }
 
     /**
@@ -68,7 +97,7 @@ class LoginActivity: BaseActivity() {
                         signIn()
                     } else {
                         // Error
-                        Snackbar.make(binding.signBtn, task.exception?.message ?: "회원가입 에러", 1000).show()
+                        Snackbar.make(binding.signBtn, task.exception?.message ?: "회원가입 중 문제가 발생했습니다.", 1000).show()
                     }
                 }
         } catch(e: Exception) {
@@ -90,7 +119,7 @@ class LoginActivity: BaseActivity() {
                     moveMainActivity(task.result?.user)
                 } else {
                     // Error
-                    Snackbar.make(binding.signBtn, task.exception?.message ?: "로그인 에러", 1000).show()
+                    Snackbar.make(binding.signBtn, task.exception?.message ?: "로그인 오류가 발생했습니다.", 1000).show()
                 }
             }
     }
@@ -108,7 +137,26 @@ class LoginActivity: BaseActivity() {
                     moveMainActivity(task.result?.user)
                 } else {
                     // Error
-                    Snackbar.make(binding.signBtn, task.exception?.message ?: "구글로그인 에러", 1000).show()
+                    Snackbar.make(binding.signBtn, task.exception?.message ?: "구글 로그인 에러", 1000).show()
+                }
+            }
+    }
+
+    /**
+     * Firebase auth sign-in with credential
+     * (with Facebook Access Token)
+     */
+    private fun handleFacebookAccessToken(token: AccessToken) {
+        println("xxx handleFacebookAccessToken()")
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        auth?.signInWithCredential(credential)
+            ?.addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    // Login(Facebook)
+                    moveMainActivity(task.result?.user)
+                } else {
+                    // Error
+                    Snackbar.make(binding.signBtn, task.exception?.message ?: "페이스북 로그인 에러", 1000).show()
                 }
             }
     }
