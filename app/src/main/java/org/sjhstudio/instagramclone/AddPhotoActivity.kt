@@ -6,12 +6,14 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
-import com.google.firebase.storage.FirebaseStorage
-import org.sjhstudio.instagramclone.MyApplication.Companion.firebaseStorage
 import org.sjhstudio.instagramclone.databinding.ActivityAddPhotoBinding
+import org.sjhstudio.instagramclone.model.PhotoContentDTO
+import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,6 +22,8 @@ class AddPhotoActivity : AppCompatActivity() {
     private val TAG = "AddPhotoActivity"
 
     private lateinit var binding: ActivityAddPhotoBinding
+    private val vm: PhotoContentViewModel by viewModels()
+
     private var photoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +39,13 @@ class AddPhotoActivity : AppCompatActivity() {
                 }
 
                 getString(R.string.upload_image) -> {
+                    binding.progressBar.visibility = View.VISIBLE
                     uploadPhoto()
                 }
             }
         }
+
+        observeResult()
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -46,15 +53,27 @@ class AddPhotoActivity : AppCompatActivity() {
         // Make file name
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val fileName = "IMAGE_${timeStamp}_.png"
-        val storageRef = firebaseStorage?.reference?.child("images")?.child(fileName)
 
         // Upload file
         photoUri?.let { uri ->
-            storageRef?.putFile(uri)?.addOnSuccessListener {
-                println("xxx ??")
-                setResult(RESULT_OK)
-                finish()
+            val contentDTO = PhotoContentDTO().apply {
+                this.imgUrl = uri.toString()
+                this.uid = MyApplication.auth?.currentUser?.uid
+                this.userId = MyApplication.auth?.currentUser?.email
+                this.explain = binding.addPhotoEt.text.toString()
+                this.timestamp = System.currentTimeMillis()
             }
+            vm.insert(fileName, uri, contentDTO)
+        }
+    }
+
+
+    private fun observeResult() {
+        vm.resultLiveData.observe(this) {
+            println("xxx observeResult")
+            binding.progressBar.visibility = View.GONE
+            setResult(RESULT_OK)
+            finish()
         }
     }
 

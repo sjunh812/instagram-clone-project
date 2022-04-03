@@ -9,9 +9,9 @@ data class PhotoContentDTO(
     var imgUrl: String? = null,
     var uid: String? = null,
     var userId: String? = null,
-    var timeStamp: String? = null,
+    var timestamp: Long? = null,
     var favoriteCount: Int = 0,
-    var favorites: Map<String, Boolean> = HashMap()
+    var favorites: MutableMap<String, Boolean> = mutableMapOf()
 ): Parcelable {
     data class Comment(
         var uid: String? = null,

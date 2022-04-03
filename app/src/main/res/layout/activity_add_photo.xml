@@ -11,8 +11,8 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:padding="13dp">
+            android:layout_height="56dp"
+            android:padding="15dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -34,53 +34,56 @@
             android:layout_below="@id/toolbar"
             android:background="@color/colorDivision" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/add_photo_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_below="@id/toolbar_division"
-            android:orientation="vertical">
+            android:layout_margin="10dp" />
 
-            <ImageView
-                android:id="@+id/add_photo_img"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:layout_margin="10dp"
-                android:padding="20dp"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_photo_et_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar_division"
+            android:layout_toEndOf="@id/add_photo_img"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            app:boxBackgroundColor="@color/white"
+            android:hint="@string/hint_image_content"
+            app:hintTextColor="@color/black"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="0.3dp"
+            app:boxStrokeWidthFocused="0.3dp"
+            app:endIconMode="clear_text">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/add_photo_et"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/hint_image_content"
-                app:hintTextColor="@color/black"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidth="0.3dp"
-                app:boxStrokeWidthFocused="0.3dp"
-                app:endIconMode="clear_text">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textSize="13dp"
-                    android:textColor="@color/black" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/add_photo_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="@string/pick_image"
+                android:layout_height="100dp"
+                android:textSize="13dp"
                 android:textColor="@color/black" />
 
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/add_photo_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_below="@id/add_photo_et_layout"
+            android:text="@string/pick_image"
+            android:textColor="@color/black" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/black"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
