@@ -64,21 +64,24 @@ class LoginActivity: BaseActivity() {
      */
     private fun facebookLogin() {
         callbackManager?.let { cm ->
-            LoginManager.getInstance().logInWithReadPermissions(
-                this,
-                cm,
-                listOf("email", "public_profile")
-            )
-            LoginManager.getInstance().registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult) {
-                    println("xxx FacebookCallback : onSuccess()")
-                    handleFacebookAccessToken(result.accessToken)
-                }
+            LoginManager.getInstance().apply {
+                logInWithReadPermissions(
+                    this@LoginActivity,
+                    cm,
+                    listOf("email", "public_profile")
+                )
 
-                override fun onCancel() { println("xxx FacebookCallback : onCancel()") }
+                registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
+                    override fun onSuccess(result: LoginResult) {
+                        println("xxx FacebookCallback : onSuccess()")
+                        handleFacebookAccessToken(result.accessToken)
+                    }
 
-                override fun onError(error: FacebookException) { println("xxx FacebookCallback : onError()") }
-            })
+                    override fun onCancel() { println("xxx FacebookCallback : onCancel()") }
+
+                    override fun onError(error: FacebookException) { println("xxx FacebookCallback : onError()") }
+                })
+            }
         }
     }
 
@@ -130,6 +133,7 @@ class LoginActivity: BaseActivity() {
      */
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
         val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+
         auth?.signInWithCredential(credential)
             ?.addOnCompleteListener { task ->
                 if(task.isSuccessful) {
@@ -147,8 +151,8 @@ class LoginActivity: BaseActivity() {
      * (with Facebook Access Token)
      */
     private fun handleFacebookAccessToken(token: AccessToken) {
-        println("xxx handleFacebookAccessToken()")
         val credential = FacebookAuthProvider.getCredential(token.token)
+
         auth?.signInWithCredential(credential)
             ?.addOnCompleteListener { task ->
                 if(task.isSuccessful) {
@@ -156,7 +160,7 @@ class LoginActivity: BaseActivity() {
                     moveMainActivity(task.result?.user)
                 } else {
                     // Error
-                    Snackbar.make(binding.signBtn, task.exception?.message ?: "페이스북 로그인 에러", 1000).show()
+                    Snackbar.make(binding.signBtn, task.exception?.message ?: "Facebook 로그인 에러", 1000).show()
                 }
             }
     }

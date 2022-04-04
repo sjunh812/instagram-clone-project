@@ -14,11 +14,13 @@ class Utils {
     companion object {
         private const val TAG = "Utils"
 
+        // 키해시 출력
         @RequiresApi(Build.VERSION_CODES.P)
         fun printKeyHash(context: Context) {
             try {
                 val packageInfo = context.packageManager.getPackageInfo(
-                    context.packageName, PackageManager.GET_SIGNING_CERTIFICATES
+                    context.packageName,
+                    PackageManager.GET_SIGNING_CERTIFICATES
                 )
                 val signingInfo = packageInfo.signingInfo.apkContentsSigners
 

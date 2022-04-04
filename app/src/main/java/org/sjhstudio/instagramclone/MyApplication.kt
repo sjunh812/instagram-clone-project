@@ -12,22 +12,13 @@ import com.google.firebase.storage.FirebaseStorage
 
 class MyApplication: Application() {
 
-    override fun onCreate() {
-        mInstance = this    // application singleton
-        auth = FirebaseAuth.getInstance()   // firebase auth
-        userUid = auth?.currentUser?.uid    // user uid
-        firebaseStorage = FirebaseStorage.getInstance() // firebase storage
-        firestore = FirebaseFirestore.getInstance() // firebase store(db)
-        super.onCreate()
-    }
-
     companion object {
 
-        lateinit var mInstance: MyApplication
-        var auth: FirebaseAuth? = null
-        var userUid: String? = null
-        var firebaseStorage: FirebaseStorage? = null
-        var firestore: FirebaseFirestore? = null
+        lateinit var mInstance: MyApplication   // 싱글톤
+        var auth: FirebaseAuth? = null  // firebase auth
+        var firebaseStorage: FirebaseStorage? = null    // firebase storage
+        var firestore: FirebaseFirestore? = null    // firebase store(db)
+        var userUid: String? = null // current user's uid
 
         fun getInstance(): MyApplication {
             return mInstance
@@ -35,6 +26,7 @@ class MyApplication: Application() {
 
         fun requestPermission(activity: Activity) {
             val needPermissionList = checkPermission()
+
             if(needPermissionList.isNotEmpty()) {
                 ActivityCompat.requestPermissions(
                     activity,
@@ -54,6 +46,15 @@ class MyApplication: Application() {
 
             return needPermissionList
         }
+    }
+
+    override fun onCreate() {
+        mInstance = this
+        auth = FirebaseAuth.getInstance()
+        firebaseStorage = FirebaseStorage.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+        userUid = auth?.currentUser?.uid
+        super.onCreate()
     }
 
 }

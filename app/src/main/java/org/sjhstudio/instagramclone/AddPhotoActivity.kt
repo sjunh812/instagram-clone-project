@@ -3,7 +3,6 @@ package org.sjhstudio.instagramclone
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,13 +10,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import org.sjhstudio.instagramclone.databinding.ActivityAddPhotoBinding
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
 import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddPhotoActivity : AppCompatActivity() {
+class AddPhotoActivity : BaseActivity() {
 
     private val TAG = "AddPhotoActivity"
 
@@ -70,10 +70,12 @@ class AddPhotoActivity : AppCompatActivity() {
 
     private fun observeResult() {
         vm.resultLiveData.observe(this) {
-            println("xxx observeResult")
-            binding.progressBar.visibility = View.GONE
-            setResult(RESULT_OK)
-            finish()
+            println("xxx observeResult($it)")
+            if(it) {
+                binding.progressBar.visibility = View.GONE
+                setResult(RESULT_OK)
+                finish()
+            }
         }
     }
 
@@ -87,8 +89,8 @@ class AddPhotoActivity : AppCompatActivity() {
                 Glide.with(this).load(uri).into(binding.addPhotoImg)
             }
         } else {
-            Log.e(TAG, "xxx photoPickerResult error : ${ar.resultCode}")
-            finish()
+            Log.e(TAG, "xxx photoPickerResult error(${ar.resultCode})")
+            Snackbar.make(binding.addPhotoBtn, "사진을 가져오는중에 오류가 발생했습니다.", 1500).show()
         }
     }
 }

@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import org.sjhstudio.instagramclone.MyApplication.Companion.requestPermission
 import org.sjhstudio.instagramclone.databinding.ActivityMainBinding
@@ -20,7 +19,6 @@ import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     private val photoContentVM: PhotoContentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,10 +88,7 @@ class MainActivity : AppCompatActivity() {
     private val addPhotoActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { ar ->
-        if(ar.resultCode == RESULT_OK) {
-            Snackbar.make(binding.toolbar, getString(R.string.upload_success), 1000).show()
-        } else {
-            Snackbar.make(binding.toolbar, getString(R.string.upload_fail), 1500).show()
-        }
+        if(ar.resultCode == RESULT_OK) Snackbar.make(binding.toolbar, getString(R.string.upload_success), 1000).show()
+        else Snackbar.make(binding.toolbar, getString(R.string.upload_fail), 1500).show()
     }
 }

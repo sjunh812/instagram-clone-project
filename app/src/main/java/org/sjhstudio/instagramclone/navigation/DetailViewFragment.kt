@@ -33,7 +33,6 @@ class DetailViewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUI()
         observePhotoContent()
-//        observeFavorite()
     }
 
     private fun setUI() {
@@ -43,7 +42,7 @@ class DetailViewFragment: Fragment() {
                 setDetailViewAdapterCallback(object: DetailViewAdapterCallback {
                     override fun onClickFavorite(pos: Int) {
                         vm.contentIdLiveData.value?.reversed()?.let { value ->
-                            vm.updateFavorite(pos, value[pos])
+                            vm.updateFavorite(value[pos])
                         }
                     }
                 })
@@ -55,7 +54,7 @@ class DetailViewFragment: Fragment() {
 
     private fun observePhotoContent() {
         vm.contentLiveData.observe(viewLifecycleOwner) { items ->
-            println("xxx observePhotoContent")
+            println("xxx observePhotoContent()")
             if(items.isNotEmpty()) {
                 val uIds = arrayListOf<String>()
 
@@ -63,17 +62,10 @@ class DetailViewFragment: Fragment() {
                     item.uid?.let { uIds.add(it) }
                 }
 
-                detailViewAdapter.contents = items.reversed() as ArrayList<PhotoContentDTO>
+                detailViewAdapter.contents = items.reversed()
                 detailViewAdapter.notifyDataSetChanged()
             }
         }
     }
-
-//    private fun observeFavorite() {
-//        println("xxx observeFavorite")
-//        vm.favoriteLiveData.observe(viewLifecycleOwner) {
-//            detailViewAdapter.notifyItemChanged(it)
-//        }
-//    }
 
 }

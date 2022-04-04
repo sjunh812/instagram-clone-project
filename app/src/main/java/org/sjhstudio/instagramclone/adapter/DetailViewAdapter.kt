@@ -17,7 +17,7 @@ interface DetailViewAdapterCallback {
 
 class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAdapter.ViewHolder>() {
 
-    var contents = arrayListOf<PhotoContentDTO>()
+    var contents = listOf<PhotoContentDTO>()
     private var callback: DetailViewAdapterCallback?= null
 
     fun setDetailViewAdapterCallback(callback: DetailViewAdapterCallback) {

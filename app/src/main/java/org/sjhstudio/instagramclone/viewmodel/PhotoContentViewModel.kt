@@ -4,30 +4,25 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
-import org.sjhstudio.instagramclone.MyApplication
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
 import org.sjhstudio.instagramclone.repository.PhotoContentRepository
-import java.util.*
 
 class PhotoContentViewModel: ViewModel() {
-
+    // Repository
     private val contentRepository = PhotoContentRepository()
 
+    // Photo content
     private var _contentLiveData = MutableLiveData<List<PhotoContentDTO>>()
     val contentLiveData: LiveData<List<PhotoContentDTO>>
         get() = _contentLiveData
+
+    // Document id
     private var _contentIdLiveData = MutableLiveData<List<String>>()
     val contentIdLiveData: LiveData<List<String>>
         get() = _contentIdLiveData
 
-    private var _favoriteLiveData = MutableLiveData<Int>()
-    val favoriteLiveData: LiveData<Int>
-        get() = _favoriteLiveData
-
+    // Result of upload photo content
     private var _resultLiveData = MutableLiveData<Boolean>()
     val resultLiveData: LiveData<Boolean>
         get() = _resultLiveData
@@ -35,11 +30,13 @@ class PhotoContentViewModel: ViewModel() {
     init {
         _contentLiveData.value = arrayListOf()
         _contentIdLiveData.value = arrayListOf()
-        _favoriteLiveData.value = 0
+        _resultLiveData.value = false
     }
 
+    /**
+     * Query all photo content data
+     */
     fun getAll() {
-        println("xxx getAll()")
         contentRepository.getAll { querySnapshot, _ ->
             val value = arrayListOf<PhotoContentDTO>()
             val idValue = arrayListOf<String>()
@@ -57,17 +54,21 @@ class PhotoContentViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Upload photo content
+     */
     fun insert(fileName: String, uri: Uri, contentDTO: PhotoContentDTO) {
-        contentRepository.insert(fileName, uri, contentDTO) {
+        contentRepository.insert(fileName, uri) {
             firestore?.collection("images")?.document()?.set(contentDTO)
             _resultLiveData.value = true
         }
     }
 
-    fun updateFavorite(pos: Int, uid: String) {
-        contentRepository.updateFavorite(uid) {
-            _favoriteLiveData.value = pos
-        }
+    /**
+     * Update favorite button
+     */
+    fun updateFavorite(uid: String) {
+        contentRepository.updateFavorite(uid)
     }
 
 }
