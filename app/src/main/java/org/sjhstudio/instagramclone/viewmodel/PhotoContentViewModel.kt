@@ -17,6 +17,11 @@ class PhotoContentViewModel: ViewModel() {
     val contentLiveData: LiveData<List<PhotoContentDTO>>
         get() = _contentLiveData
 
+    // Photo content(uid)
+    private var _uidContentLiveData = MutableLiveData<List<PhotoContentDTO>>()
+    val uidContentLiveData: LiveData<List<PhotoContentDTO>>
+        get() = _uidContentLiveData
+
     // Document id
     private var _contentIdLiveData = MutableLiveData<List<String>>()
     val contentIdLiveData: LiveData<List<String>>
@@ -30,6 +35,7 @@ class PhotoContentViewModel: ViewModel() {
     init {
         _contentLiveData.value = arrayListOf()
         _contentIdLiveData.value = arrayListOf()
+        _uidContentLiveData.value = arrayListOf()
         _resultLiveData.value = false
     }
 
@@ -52,6 +58,31 @@ class PhotoContentViewModel: ViewModel() {
             _contentLiveData.value = value
             _contentIdLiveData.value = idValue
         }
+    }
+
+    /**
+     * Query all photo content data where uid
+     */
+    fun getAllWhereUid(uid: String) {
+        contentRepository.getAllWhereUid(uid) { querySnapshot, _ ->
+            val value = arrayListOf<PhotoContentDTO>()
+
+            querySnapshot?.let { qs ->
+                for(snapshot in qs.documents) {
+                    val item = snapshot.toObject(PhotoContentDTO::class.java)
+                    value.add(item!!)
+                }
+            }
+
+            _uidContentLiveData.value = value
+        }
+    }
+
+    /**
+     * Clear photo content data where uid
+     */
+    fun clearUidContent() {
+        _uidContentLiveData.value = arrayListOf()
     }
 
     /**

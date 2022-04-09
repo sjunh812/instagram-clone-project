@@ -14,21 +14,21 @@
     <string name="signin_facebook">Facebook 로그인</string>
     <string name="signup_complete">Membership success</string>
     <string name="signin_complete">Login success</string>
-    <string name="signout">Signout</string>
+    <string name="signout">로그아웃</string>
     <string name="signout_success">Signout success</string>
     <string name="signout_fail">Signout fail</string>
     <string name="signout_fail_null">Please enter your email and password</string>
     <!--  Bottom Navigation View  -->
-    <string name="home">home</string>
-    <string name="search">Search</string>
-    <string name="gallery">Gallery</string>
-    <string name="favorite">Favorite</string>
-    <string name="account">Account</string>
+    <string name="home">홈</string>
+    <string name="search">검색</string>
+    <string name="gallery">갤러리</string>
+    <string name="favorite">favorite</string>
+    <string name="account">계정</string>
     <!--  Account  -->
-    <string name="post">Post</string>
-    <string name="following">Following</string>
-    <string name="follower">Follower</string>
-    <string name="follow">Follow</string>
+    <string name="post">게시물</string>
+    <string name="following">팔로잉</string>
+    <string name="follower">팔로워</string>
+    <string name="follow">팔로우</string>
     <string name="follow_cancel">Follow cancel</string>
     <string name="profile">Profile</string>
     <string name="count_0">0</string>
@@ -41,7 +41,7 @@
     <!--  Add Photo  -->
     <string name="upload_image">사진 업로드</string>
     <string name="pick_image">사진 가져오기</string>
-    <string name="hint_image_content">문구 입력..</string>
+    <string name="hint_image_content">문구 입력...</string>
     <string name="upload_success">사진 업로드 성공!</string>
     <string name="upload_fail">사진 업로드중 문제가 발생했습니다.</string>
     <!--  Toolbar  -->

@@ -47,8 +47,10 @@ class DetailViewFragment: Fragment() {
                     }
                 })
             }
-        binding.detailRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.detailRv.adapter = detailViewAdapter
+        binding.detailRv.apply {
+            adapter = detailViewAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
         vm.getAll()
     }
 

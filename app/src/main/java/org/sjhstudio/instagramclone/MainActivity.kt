@@ -4,11 +4,13 @@ import android.Manifest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
 import org.sjhstudio.instagramclone.MyApplication.Companion.requestPermission
+import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.databinding.ActivityMainBinding
 import org.sjhstudio.instagramclone.navigation.AlarmFragment
 import org.sjhstudio.instagramclone.navigation.DetailViewFragment
@@ -24,13 +26,33 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
         setBottomNavigation()
         requestPermission(this)
     }
 
+    private fun setToolbarDefault() {
+        binding.toolbarImg.visibility = View.VISIBLE
+        binding.toolbarBackBtn.visibility = View.GONE
+        binding.toolbarUsernameTv.visibility = View.GONE
+    }
+
+    fun setToolbarForOtherUser(userId: String?) {
+        binding.toolbarImg.visibility = View.GONE
+        binding.toolbarBackBtn.apply {
+            visibility = View.VISIBLE
+            setOnClickListener {
+                binding.bottomNavigation.selectedItemId = R.id.action_home
+            }
+        }
+        binding.toolbarUsernameTv.apply {
+            visibility = View.VISIBLE
+            text = userId
+        }
+    }
+
     private fun setBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener {
+            setToolbarDefault()
             val transaction = supportFragmentManager.beginTransaction()
 
             when(it.itemId) {
@@ -59,6 +81,9 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.action_account -> {
                     val userFragment = UserFragment()
+                        .apply {
+                            arguments = Bundle().apply { putString("uid", userUid) }
+                        }
                     transaction.replace(R.id.main_container, userFragment, "userFragment").commit()
                     true
                 }

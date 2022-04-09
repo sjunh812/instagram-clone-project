@@ -30,6 +30,11 @@ class LoginActivity: BaseActivity() {
     private var googleSignInClient: GoogleSignInClient? = null  // google
     private var callbackManager: CallbackManager? = null    // facebook
 
+    override fun onStart() {
+        super.onStart()
+        moveMainActivity(auth?.currentUser) // 자동로그인
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
@@ -185,6 +190,7 @@ class LoginActivity: BaseActivity() {
 
     private fun moveMainActivity(user: FirebaseUser?) {
         if(user != null) {
+            MyApplication.userUid = auth?.currentUser?.uid
             startActivity(Intent(this,MainActivity::class.java))
             finish()
         }

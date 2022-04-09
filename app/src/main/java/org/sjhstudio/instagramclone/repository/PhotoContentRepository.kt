@@ -15,6 +15,10 @@ class PhotoContentRepository {
         firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener(snapshotListener)
     }
 
+    fun getAllWhereUid(uid: String, snapshotListener: EventListener<QuerySnapshot>) {
+        firestore?.collection("images")?.whereEqualTo("uid", uid)?.addSnapshotListener(snapshotListener)
+    }
+
     fun insert(fileName: String, uri: Uri, successListener: OnSuccessListener<Uri>) {
         val storageRef = firebaseStorage?.reference?.child("images")?.child(fileName)
 

@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/SJH/StudioProjects/instagram-clone-project/app/src/main/res/layout/activity_add_photo.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/SJH/StudioProjects/instagram-clone-project/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/SJH/StudioProjects/instagram-clone-project/app/src/main/res/layout/fragment_user.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/SJH/StudioProjects/instagram-clone-project/app/src/main/res/layout/item_detail.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/SJH/StudioProjects/instagram-clone-project/app/src/main/res/menu/menu_bottom_navigation.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/sjunh/Desktop/InstagramClone/app/src/main/res/drawable/bottom_navigation_selector.xml" value="0.2005" />
         <entry key="..\:/Users/sjunh/Desktop/InstagramClone/app/src/main/res/drawable/push_icon.xml" value="0.2035" />
         <entry key="..\:/Users/sjunh/Desktop/InstagramClone/app/src/main/res/layout/activity_add_photo.xml" value="0.30092592592592593" />

@@ -53,7 +53,6 @@ class MyApplication: Application() {
         auth = FirebaseAuth.getInstance()
         firebaseStorage = FirebaseStorage.getInstance()
         firestore = FirebaseFirestore.getInstance()
-        userUid = auth?.currentUser?.uid
         super.onCreate()
     }
 

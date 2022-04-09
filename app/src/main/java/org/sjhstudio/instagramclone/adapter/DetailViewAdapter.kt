@@ -1,15 +1,19 @@
 package org.sjhstudio.instagramclone.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import org.sjhstudio.instagramclone.MainActivity
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.R
 import org.sjhstudio.instagramclone.databinding.ItemDetailBinding
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
+import org.sjhstudio.instagramclone.navigation.UserFragment
 
 interface DetailViewAdapterCallback {
     fun onClickFavorite(pos: Int)
@@ -32,8 +36,23 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
             binding.favoriteImg.setOnClickListener {
                 callback?.onClickFavorite(adapterPosition)
             }
+            binding.profileImg.setOnClickListener {
+                val contentDTO = contents[adapterPosition]
+                val fragment = UserFragment()
+                    .apply {
+                        arguments = Bundle().apply {
+                            putString("uid", contentDTO.uid)
+                            putString("userId", contentDTO.userId)
+                        }
+                    }
+                (context as MainActivity).supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.main_container, fragment)
+                    .commit()
+            }
         }
 
+        @SuppressLint("SetTextI18n")
         fun setBind(item: PhotoContentDTO) {
             Glide.with(context).load(item.imgUrl).into(binding.photoContentImg)
             binding.profileTv.text = item.userId
