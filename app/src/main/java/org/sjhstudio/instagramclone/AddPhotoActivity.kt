@@ -90,7 +90,7 @@ class AddPhotoActivity : BaseActivity() {
             }
         } else {
             Log.e(TAG, "xxx photoPickerResult error(${ar.resultCode})")
-            Snackbar.make(binding.addPhotoBtn, "사진을 가져오는중에 오류가 발생했습니다.", 1500).show()
+            Snackbar.make(binding.addPhotoBtn, getString(R.string.upload_fail), 1500).show()
         }
     }
 }

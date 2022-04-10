@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.sjhstudio.instagramclone.adapter.DetailViewAdapter
 import org.sjhstudio.instagramclone.adapter.DetailViewAdapterCallback
 import org.sjhstudio.instagramclone.databinding.FragmentDetailViewBinding
-import org.sjhstudio.instagramclone.model.PhotoContentDTO
 import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
+import org.sjhstudio.instagramclone.viewmodel.ProfileViewModel
 
 class DetailViewFragment: Fragment() {
 
     private lateinit var binding: FragmentDetailViewBinding
     private lateinit var detailViewAdapter: DetailViewAdapter
 
-    private val vm: PhotoContentViewModel by activityViewModels()
+    private val photoContentVm: PhotoContentViewModel by activityViewModels()
+    private val profileVm: ProfileViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +34,7 @@ class DetailViewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUI()
         observePhotoContent()
+        observeProfiles()
     }
 
     private fun setUI() {
@@ -41,8 +43,8 @@ class DetailViewFragment: Fragment() {
                 setHasStableIds(true)
                 setDetailViewAdapterCallback(object: DetailViewAdapterCallback {
                     override fun onClickFavorite(pos: Int) {
-                        vm.contentIdLiveData.value?.reversed()?.let { value ->
-                            vm.updateFavorite(value[pos])
+                        photoContentVm.contentIdLiveData.value?.reversed()?.let { value ->
+                            photoContentVm.updateFavorite(value[pos])
                         }
                     }
                 })
@@ -51,12 +53,14 @@ class DetailViewFragment: Fragment() {
             adapter = detailViewAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-        vm.getAll()
+
+        photoContentVm.getAll()
+        profileVm.getAll()
     }
 
     private fun observePhotoContent() {
-        vm.contentLiveData.observe(viewLifecycleOwner) { items ->
-            println("xxx observePhotoContent()")
+        photoContentVm.contentLiveData.observe(viewLifecycleOwner) { items ->
+            println("xxx observePhotoContent() from DetailViewFragment")
             if(items.isNotEmpty()) {
                 val uIds = arrayListOf<String>()
 
@@ -65,6 +69,16 @@ class DetailViewFragment: Fragment() {
                 }
 
                 detailViewAdapter.contents = items.reversed()
+                detailViewAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun observeProfiles() {
+        profileVm.profilesLiveData.observe(viewLifecycleOwner) {
+            println("xxx observeProfile() from DetailViewFragment")
+            if(it.isNotEmpty()) {
+                detailViewAdapter.profiles = it
                 detailViewAdapter.notifyDataSetChanged()
             }
         }

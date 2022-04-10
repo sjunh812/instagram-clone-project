@@ -8,6 +8,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import org.sjhstudio.instagramclone.MyApplication.Companion.requestPermission
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
@@ -17,11 +18,13 @@ import org.sjhstudio.instagramclone.navigation.DetailViewFragment
 import org.sjhstudio.instagramclone.navigation.GridFragment
 import org.sjhstudio.instagramclone.navigation.UserFragment
 import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
+import org.sjhstudio.instagramclone.viewmodel.ProfileViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val photoContentVM: PhotoContentViewModel by viewModels()
+    private val profileVm: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +51,10 @@ class MainActivity : AppCompatActivity() {
             visibility = View.VISIBLE
             text = userId
         }
+    }
+
+    fun goUserFragment() {
+        binding.bottomNavigation.selectedItemId = R.id.action_account
     }
 
     private fun setBottomNavigation() {

@@ -3,6 +3,7 @@ package org.sjhstudio.instagramclone.repository
 import android.net.Uri
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import org.sjhstudio.instagramclone.MyApplication.Companion.firebaseStorage
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
@@ -11,12 +12,15 @@ import org.sjhstudio.instagramclone.model.PhotoContentDTO
 
 class PhotoContentRepository {
 
+    var allRegistration: ListenerRegistration? = null
+    var uidRegistration: ListenerRegistration? = null
+
     fun getAll(snapshotListener: EventListener<QuerySnapshot>){
-        firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener(snapshotListener)
+        allRegistration = firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener(snapshotListener)
     }
 
     fun getAllWhereUid(uid: String, snapshotListener: EventListener<QuerySnapshot>) {
-        firestore?.collection("images")?.whereEqualTo("uid", uid)?.addSnapshotListener(snapshotListener)
+        uidRegistration = firestore?.collection("images")?.whereEqualTo("uid", uid)?.addSnapshotListener(snapshotListener)
     }
 
     fun insert(fileName: String, uri: Uri, successListener: OnSuccessListener<Uri>) {
@@ -45,12 +49,17 @@ class PhotoContentRepository {
                         dto.favorites[userUid!!] = true
                     }
 
-                    transition.set(doc, dto)
+                    transition.set(dr, dto)
                 }
             }
         }?.addOnSuccessListener {
             println("xxx updateFavorite() : success!!")
         }
+    }
+
+    fun remove() {
+        allRegistration?.remove()
+        uidRegistration?.remove()
     }
 
 }

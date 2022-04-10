@@ -78,11 +78,8 @@ class PhotoContentViewModel: ViewModel() {
         }
     }
 
-    /**
-     * Clear photo content data where uid
-     */
-    fun clearUidContent() {
-        _uidContentLiveData.value = arrayListOf()
+    fun remove() {
+        contentRepository.remove()
     }
 
     /**

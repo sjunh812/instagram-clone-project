@@ -52,6 +52,7 @@
             android:layout_marginTop="15dp"
             android:background="@color/white"
             android:hint="@string/hint_image_content"
+            android:textSize="11dp"
             app:boxBackgroundColor="@color/white"
             app:hintTextColor="@color/black"
             app:boxStrokeColor="@color/black"

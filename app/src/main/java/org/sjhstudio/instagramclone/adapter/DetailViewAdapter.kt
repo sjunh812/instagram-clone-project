@@ -2,17 +2,21 @@ package org.sjhstudio.instagramclone.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import org.sjhstudio.instagramclone.MainActivity
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.R
+import org.sjhstudio.instagramclone.UserActivity
 import org.sjhstudio.instagramclone.databinding.ItemDetailBinding
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
+import org.sjhstudio.instagramclone.model.ProfileDTO
 import org.sjhstudio.instagramclone.navigation.UserFragment
 
 interface DetailViewAdapterCallback {
@@ -22,6 +26,7 @@ interface DetailViewAdapterCallback {
 class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAdapter.ViewHolder>() {
 
     var contents = listOf<PhotoContentDTO>()
+    var profiles = listOf<ProfileDTO>()
     private var callback: DetailViewAdapterCallback?= null
 
     fun setDetailViewAdapterCallback(callback: DetailViewAdapterCallback) {
@@ -34,27 +39,46 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
 
         init {
             binding.favoriteImg.setOnClickListener {
+                // 좋아요버튼
                 callback?.onClickFavorite(adapterPosition)
             }
             binding.profileImg.setOnClickListener {
+                // 프로필이미지
+//                val contentDTO = contents[adapterPosition]
+//                val fragment = UserFragment()
+//                    .apply {
+//                        arguments = Bundle().apply {
+//                            putString("uid", contentDTO.uid)
+//                            putString("userId", contentDTO.userId)
+//                        }
+//                    }
+//                (context as MainActivity).supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.main_container, fragment)
+//                    .commit()
                 val contentDTO = contents[adapterPosition]
-                val fragment = UserFragment()
-                    .apply {
-                        arguments = Bundle().apply {
-                            putString("uid", contentDTO.uid)
-                            putString("userId", contentDTO.userId)
+                if(userUid == contentDTO.uid) {  // 마이페이지
+                    (context as MainActivity).goUserFragment()
+                } else {
+                    val intent = Intent(context, UserActivity::class.java)
+                        .apply {
+                            putExtra("uid", contentDTO.uid)
+                            putExtra("userId", contentDTO.userId)
                         }
-                    }
-                (context as MainActivity).supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_container, fragment)
-                    .commit()
+                    context.startActivity(intent)
+                }
             }
         }
 
         @SuppressLint("SetTextI18n")
-        fun setBind(item: PhotoContentDTO) {
-            Glide.with(context).load(item.imgUrl).into(binding.photoContentImg)
+        fun setBind(item: PhotoContentDTO, url: String?) {
+            Glide.with(context)
+                .load(url ?: R.drawable.ic_profile)
+                .apply(RequestOptions().circleCrop())
+                .into(binding.profileImg)
+            Glide.with(context)
+                .load(item.imgUrl)
+                .into(binding.photoContentImg)
             binding.profileTv.text = item.userId
             binding.favoriteTv.text = "좋아요 ${item.favoriteCount}개"
             binding.explainTv.text = item.explain
@@ -73,7 +97,16 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.setBind(contents[position])
+        val content = contents[position]
+
+        profiles.forEach {
+            if(it.uid == content.uid) {
+                holder.setBind(contents[position], it.photoUri)
+                return
+            }
+        }
+
+        holder.setBind(contents[position], null)
     }
 
     override fun getItemCount(): Int {
