@@ -16,13 +16,14 @@ class FollowRepository {
     }
 
     fun remove() {
+        // query에 대한 listener registration 제거
         registration?.remove()
     }
 
     fun updateFollow(uid: String) {
-        // 본인이 다른사람에게 팔로우이벤트,
-        // 본인의 팔로잉 데이터변경
-        // 다른사람의 팔로우 데이터변경
+        // 본인이 다른사람에게 팔로우시
+        // 본인의 팔로잉 데이터 변경
+        // 다른사람의 팔로우 데이터 변경
         val docFollowing = firestore?.collection("users")?.document(userUid!!)
         docFollowing?.let { dr ->
             firestore?.runTransaction { transaction ->

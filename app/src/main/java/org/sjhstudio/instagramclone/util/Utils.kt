@@ -1,4 +1,4 @@
-package org.sjhstudio.instagramclone
+package org.sjhstudio.instagramclone.util
 
 import android.content.Context
 import android.content.pm.PackageManager

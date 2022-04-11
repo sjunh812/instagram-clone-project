@@ -72,7 +72,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="35dp"
                 android:text="@string/signin_email"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/facebook_login_btn"

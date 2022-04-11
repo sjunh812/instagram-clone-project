@@ -12,8 +12,8 @@ import org.sjhstudio.instagramclone.model.PhotoContentDTO
 
 class PhotoContentRepository {
 
-    var allRegistration: ListenerRegistration? = null
-    var uidRegistration: ListenerRegistration? = null
+    var allRegistration: ListenerRegistration? = null   // getAll()에 대한 snapshotListener의 registration
+    var uidRegistration: ListenerRegistration? = null   // getAllWhereUid()에 대한 snapshotListenr의 registration
 
     fun getAll(snapshotListener: EventListener<QuerySnapshot>){
         allRegistration = firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener(snapshotListener)
@@ -58,6 +58,7 @@ class PhotoContentRepository {
     }
 
     fun remove() {
+        // query에 대한 listener registration 제거
         allRegistration?.remove()
         uidRegistration?.remove()
     }

@@ -31,6 +31,9 @@ class ProfileViewModel: ViewModel() {
         _resultLiveData.value = false
     }
 
+    /**
+     * Query all data
+     */
     fun getAll() {
         profileRepository.getAll { querySnapshot, _ ->
             val value = arrayListOf<ProfileDTO>()
@@ -48,6 +51,9 @@ class ProfileViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Query all data where 'uid'
+     */
     fun getAllWhereUid(uid: String) {
         profileRepository.getAllWhereUid(uid) { documentSnapshot, _ ->
             documentSnapshot?.let { ds ->
@@ -71,6 +77,9 @@ class ProfileViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Remove listener registration
+     */
     fun remove() {
         profileRepository.remove()
     }

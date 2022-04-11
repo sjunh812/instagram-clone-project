@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import org.sjhstudio.instagramclone.databinding.ActivityAddPhotoBinding
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
+import org.sjhstudio.instagramclone.util.BaseActivity
 import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
 import java.text.SimpleDateFormat
 import java.util.*

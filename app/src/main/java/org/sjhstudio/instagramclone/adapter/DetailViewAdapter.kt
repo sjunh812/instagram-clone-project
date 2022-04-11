@@ -2,7 +2,6 @@ package org.sjhstudio.instagramclone.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +11,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import org.sjhstudio.instagramclone.MainActivity
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
+import org.sjhstudio.instagramclone.OtherUserFragment
 import org.sjhstudio.instagramclone.R
-import org.sjhstudio.instagramclone.UserActivity
 import org.sjhstudio.instagramclone.databinding.ItemDetailBinding
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
 import org.sjhstudio.instagramclone.model.ProfileDTO
-import org.sjhstudio.instagramclone.navigation.UserFragment
 
 interface DetailViewAdapterCallback {
     fun onClickFavorite(pos: Int)
@@ -44,28 +42,21 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
             }
             binding.profileImg.setOnClickListener {
                 // 프로필이미지
-//                val contentDTO = contents[adapterPosition]
-//                val fragment = UserFragment()
-//                    .apply {
-//                        arguments = Bundle().apply {
-//                            putString("uid", contentDTO.uid)
-//                            putString("userId", contentDTO.userId)
-//                        }
-//                    }
-//                (context as MainActivity).supportFragmentManager
-//                    .beginTransaction()
-//                    .replace(R.id.main_container, fragment)
-//                    .commit()
                 val contentDTO = contents[adapterPosition]
                 if(userUid == contentDTO.uid) {  // 마이페이지
                     (context as MainActivity).goUserFragment()
                 } else {
-                    val intent = Intent(context, UserActivity::class.java)
+                    val fragment = OtherUserFragment()
                         .apply {
-                            putExtra("uid", contentDTO.uid)
-                            putExtra("userId", contentDTO.userId)
+                            arguments = Bundle().apply {
+                                putString("uid", contentDTO.uid)
+                                putString("userId", contentDTO.userId)
+                            }
                         }
-                    context.startActivity(intent)
+                    (context as MainActivity).supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.main_container, fragment)
+                        .commit()
                 }
             }
         }

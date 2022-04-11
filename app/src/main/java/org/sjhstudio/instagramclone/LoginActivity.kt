@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import org.sjhstudio.instagramclone.MyApplication.Companion.auth
 import org.sjhstudio.instagramclone.databinding.ActivityLoginBinding
+import org.sjhstudio.instagramclone.util.BaseActivity
 import java.lang.Exception
 
 class LoginActivity: BaseActivity() {

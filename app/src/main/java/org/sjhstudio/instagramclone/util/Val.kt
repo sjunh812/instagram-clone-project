@@ -1,4 +1,4 @@
-package org.sjhstudio.instagramclone
+package org.sjhstudio.instagramclone.util
 
 class Val {
 

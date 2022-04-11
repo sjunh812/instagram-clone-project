@@ -15,6 +15,13 @@ class FollowViewModel: ViewModel() {
     val followLiveData: LiveData<FollowDTO>
         get() = _followLiveData
 
+    init {
+        _followLiveData.value = FollowDTO()
+    }
+
+    /**
+     * Query all data where 'uid'
+     */
     fun getAllWhereUid(uid: String) {
         followRepository.getAllWhereUid(uid) { documentSnapshot, _ ->
             documentSnapshot?.let { ds ->
@@ -26,15 +33,18 @@ class FollowViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Update data
+     */
     fun updateFollow(uid: String) {
         followRepository.updateFollow(uid)
     }
 
+    /**
+     * Remove listener registration
+     */
     fun remove() {
         followRepository.remove()
     }
 
-    fun clearFollow() {
-        _followLiveData.value = FollowDTO()
-    }
 }

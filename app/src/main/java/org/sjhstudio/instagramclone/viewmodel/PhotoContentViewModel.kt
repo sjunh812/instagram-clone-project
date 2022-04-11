@@ -61,7 +61,7 @@ class PhotoContentViewModel: ViewModel() {
     }
 
     /**
-     * Query all photo content data where uid
+     * Query all photo content data where 'uid'
      */
     fun getAllWhereUid(uid: String) {
         contentRepository.getAllWhereUid(uid) { querySnapshot, _ ->
@@ -76,10 +76,6 @@ class PhotoContentViewModel: ViewModel() {
 
             _uidContentLiveData.value = value
         }
-    }
-
-    fun remove() {
-        contentRepository.remove()
     }
 
     /**
@@ -97,6 +93,13 @@ class PhotoContentViewModel: ViewModel() {
      */
     fun updateFavorite(uid: String) {
         contentRepository.updateFavorite(uid)
+    }
+
+    /**
+     * Remove listener registration
+     */
+    fun remove() {
+        contentRepository.remove()
     }
 
 }

@@ -11,7 +11,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="56dp"
             app:contentInsetStart="5dp">
 
             <RelativeLayout
@@ -23,7 +23,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_centerVertical="true"
                     android:visibility="gone"
                     android:src="@drawable/ic_arrow_back" />
@@ -36,13 +36,13 @@
                     android:layout_toEndOf="@id/toolbar_back_btn"
                     android:visibility="gone"
                     android:text=""
-                    android:textSize="15dp"
+                    android:textSize="13dp"
                     android:textStyle="bold"
                     android:textColor="@color/colorNavIcon" />
 
                 <ImageView
                     android:id="@+id/toolbar_img"
-                    android:layout_width="160dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/logo_title" />
 
@@ -74,10 +74,10 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="56dp"
             android:layout_alignParentBottom="true"
             app:elevation="0dp"
-            app:itemIconSize="25dp"
+            app:itemIconSize="28dp"
             app:itemIconTint="@drawable/bottom_navigation_selector"
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/menu_bottom_navigation" />

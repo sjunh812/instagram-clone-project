@@ -68,34 +68,25 @@ class UserFragment: Fragment() {
     }
 
     private fun initUi() {
-        if(curUid == userUid) {
-            // My page
-            binding.followOrSignoutBtn.apply {
-                text = getString(R.string.signout)
-                setOnClickListener {
-                    // 로그아웃
-                    activity?.finish()
-                    auth?.signOut()
-                    startActivity(Intent(activity, LoginActivity::class.java))
-                }
+        // My page
+        Glide.with(this)
+            .load(R.drawable.ic_profile)
+            .apply(RequestOptions().circleCrop())
+            .into(binding.accountImg)
+        binding.followOrSignoutBtn.apply {
+            text = getString(R.string.signout)
+            setOnClickListener {
+                // 로그아웃
+                activity?.finish()
+                auth?.signOut()
+                startActivity(Intent(activity, LoginActivity::class.java))
             }
-            binding.accountImg.setOnClickListener {
-                // Change profile image
-                val photoPickerIntent = Intent(Intent.ACTION_PICK)
-                    .apply { type = "image/*" }
-                photoPickerResult.launch(photoPickerIntent)
-            }
-        } else {
-            // Other user page
-            val mainActivity = activity as MainActivity
-            mainActivity.setToolbarForOtherUser(arguments?.getString("userId"))
-            binding.followOrSignoutBtn.apply {
-                text = getString(R.string.follow)
-                setOnClickListener {
-                    // 팔로우
-                    curUid?.let { uid -> followVm.updateFollow(uid) }
-                }
-            }
+        }
+        binding.accountImg.setOnClickListener {
+            // Change profile image
+            val photoPickerIntent = Intent(Intent.ACTION_PICK)
+                .apply { type = "image/*" }
+            photoPickerResult.launch(photoPickerIntent)
         }
         accountPhotoAdapter = AccountPhotoAdapter(requireContext())
             .apply {
