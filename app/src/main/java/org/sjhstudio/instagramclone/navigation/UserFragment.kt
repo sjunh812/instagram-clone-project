@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import org.sjhstudio.instagramclone.LoginActivity
-import org.sjhstudio.instagramclone.MainActivity
 import org.sjhstudio.instagramclone.MyApplication.Companion.auth
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.R
@@ -34,11 +33,20 @@ class UserFragment: Fragment() {
 
     private var curUid: String? = null
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
         photoContentVm.remove()
         profileVm.remove()
         followVm.remove()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        curUid?.let {
+            photoContentVm.getAllWhereUid(it)
+            profileVm.getAllWhereUid(it)
+            followVm.getAllWhereUid(it)
+        }
     }
 
     override fun onCreateView(
@@ -46,28 +54,25 @@ class UserFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        println("xxx onCreateView()")
         binding = FragmentUserBinding.inflate(inflater, container, false)
-
+        curUid = arguments?.getString("uid")
         photoContentVm = ViewModelProvider(requireActivity())[PhotoContentViewModel::class.java]
         profileVm = ViewModelProvider(requireActivity())[ProfileViewModel::class.java]
         followVm = ViewModelProvider(requireActivity())[FollowViewModel::class.java]
-
-        curUid = arguments?.getString("uid")
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUi()
+        setUi()
         observePhotoContent()
         observeProfile()
         observeProfileResult()
         observeFollow()
     }
 
-    private fun initUi() {
+    private fun setUi() {
         // My page
         Glide.with(this)
             .load(R.drawable.ic_profile)
@@ -84,6 +89,8 @@ class UserFragment: Fragment() {
         }
         binding.accountImg.setOnClickListener {
             // Change profile image
+            binding.progressBar.visibility = View.VISIBLE
+
             val photoPickerIntent = Intent(Intent.ACTION_PICK)
                 .apply { type = "image/*" }
             photoPickerResult.launch(photoPickerIntent)
@@ -95,11 +102,6 @@ class UserFragment: Fragment() {
         binding.accountRv.apply {
             adapter = accountPhotoAdapter
             layoutManager = GridLayoutManager(requireContext(), 3)
-        }
-        curUid?.let {
-            photoContentVm.getAllWhereUid(it)
-            profileVm.getAllWhereUid(it)
-            followVm.getAllWhereUid(it)
         }
     }
 
@@ -115,6 +117,8 @@ class UserFragment: Fragment() {
     fun observeProfile() {
         profileVm.profileLiveData.observe(viewLifecycleOwner) {
             println("xxx observeProfile() from UserFragment")
+            binding.progressBar.visibility = View.GONE
+
             Glide.with(requireActivity())
                 .load(it.photoUri ?: R.drawable.ic_profile)
                 .apply(RequestOptions().circleCrop())
@@ -125,7 +129,11 @@ class UserFragment: Fragment() {
     fun observeProfileResult() {
         profileVm.resultLiveData.observe(viewLifecycleOwner) {
             println("xxx observeProfileResult() from UserFragment")
-            if(it) profileVm.getAllWhereUid(userUid!!)
+            if(it) {
+                Snackbar.make(binding.accountImg, getString(R.string.upload_success), 700).show()
+                profileVm.initResult()
+                profileVm.getAllWhereUid(userUid!!)
+            }
         }
     }
 
@@ -155,6 +163,7 @@ class UserFragment: Fragment() {
                 profileVm.insert(userUid!!, uri)
             }
         } else {
+            binding.progressBar.visibility = View.GONE
             Snackbar.make(binding.accountImg, getString(R.string.upload_fail), 1500).show()
         }
     }

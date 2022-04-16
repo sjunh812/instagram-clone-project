@@ -2,6 +2,7 @@ package org.sjhstudio.instagramclone.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import org.sjhstudio.instagramclone.CommentActivity
 import org.sjhstudio.instagramclone.MainActivity
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.OtherUserFragment
@@ -24,6 +26,7 @@ interface DetailViewAdapterCallback {
 class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAdapter.ViewHolder>() {
 
     var contents = listOf<PhotoContentDTO>()
+    var contentUids = listOf<String>()
     var profiles = listOf<ProfileDTO>()
     private var callback: DetailViewAdapterCallback?= null
 
@@ -43,6 +46,7 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
             binding.profileImg.setOnClickListener {
                 // 프로필이미지
                 val contentDTO = contents[adapterPosition]
+
                 if(userUid == contentDTO.uid) {  // 마이페이지
                     (context as MainActivity).goUserFragment()
                 } else {
@@ -58,6 +62,12 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
                         .replace(R.id.main_container, fragment)
                         .commit()
                 }
+            }
+            binding.commentImg.setOnClickListener {
+                // 댓글
+                val intent = Intent(context, CommentActivity::class.java)
+                    .apply { putExtra("contentUid", contentUids[adapterPosition]) }
+                context.startActivity(intent)
             }
         }
 

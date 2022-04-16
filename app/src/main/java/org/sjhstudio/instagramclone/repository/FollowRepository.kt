@@ -32,7 +32,7 @@ class FollowRepository {
                 if(followDTO == null) {
                     followDTO = FollowDTO().apply {
                         followingCount = 1
-                        followings[userUid!!] = true
+                        followings[uid] = true
                     }
                 } else {
                     if(followDTO.followings.containsKey(uid)) {

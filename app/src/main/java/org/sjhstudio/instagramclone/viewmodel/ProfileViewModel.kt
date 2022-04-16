@@ -78,6 +78,13 @@ class ProfileViewModel: ViewModel() {
     }
 
     /**
+     * Init result data(false)
+     */
+    fun initResult() {
+        _resultLiveData.value = false
+    }
+
+    /**
      * Remove listener registration
      */
     fun remove() {

@@ -50,11 +50,11 @@ class OtherUserFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        id = arguments?.getString("userId")
+        uid = arguments?.getString("uid")
         photoContentVm = ViewModelProvider(this)[PhotoContentViewModel::class.java]
         profileVm = ViewModelProvider(this)[ProfileViewModel::class.java]
         followVm = ViewModelProvider(this)[FollowViewModel::class.java]
-        id = arguments?.getString("userId")
-        uid = arguments?.getString("uid")
 
         initUi()
         observePhotoContent()

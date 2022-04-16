@@ -192,6 +192,7 @@ class LoginActivity: BaseActivity() {
     private fun moveMainActivity(user: FirebaseUser?) {
         if(user != null) {
             MyApplication.userUid = auth?.currentUser?.uid
+            MyApplication.userId = auth?.currentUser?.email
             startActivity(Intent(this,MainActivity::class.java))
             finish()
         }

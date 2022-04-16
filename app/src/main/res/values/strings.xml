@@ -37,7 +37,7 @@
     <string name="alarm_comment">left a message</string>
     <string name="alarm_follow">has started to follow your account</string>
     <!--  Comment  -->
-    <string name="send">Send</string>
+    <string name="send">작성</string>
     <!--  Add Photo  -->
     <string name="upload_image">사진 업로드</string>
     <string name="pick_image">사진 가져오기</string>

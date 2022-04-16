@@ -27,6 +27,11 @@ class PhotoContentViewModel: ViewModel() {
     val contentIdLiveData: LiveData<List<String>>
         get() = _contentIdLiveData
 
+    // Comment
+    private var _commentLiveData = MutableLiveData<List<PhotoContentDTO.Comment>>()
+    val commentLiveData: LiveData<List<PhotoContentDTO.Comment>>
+        get() = _commentLiveData
+
     // Result of upload photo content
     private var _resultLiveData = MutableLiveData<Boolean>()
     val resultLiveData: LiveData<Boolean>
@@ -79,13 +84,40 @@ class PhotoContentViewModel: ViewModel() {
     }
 
     /**
+     * Query all comment where 'contentUid'
+     */
+    fun getAllComment(contentUid: String) {
+        contentRepository.getAllComment(contentUid) { querySnapshot, _ ->
+            val comments = arrayListOf<PhotoContentDTO.Comment>()
+
+            querySnapshot?.let { qs ->
+                println("xxx ${qs.size()}")
+                for(snapshot in qs.documents) {
+                    val item = snapshot.toObject(PhotoContentDTO.Comment::class.java)!!
+                    comments.add(item)
+                }
+            }
+
+            _commentLiveData.value = comments
+        }
+    }
+
+    /**
      * Upload photo content
      */
     fun insert(fileName: String, uri: Uri, contentDTO: PhotoContentDTO) {
-        contentRepository.insert(fileName, uri) {
+        contentRepository.insert(fileName, uri) { 
+            contentDTO.imgUrl = it.toString()
             firestore?.collection("images")?.document()?.set(contentDTO)
             _resultLiveData.value = true
         }
+    }
+
+    /**
+     * Write comment
+     */
+    fun insertComment(contentUid: String, comment: String) {
+        contentRepository.insertComment(contentUid, comment)
     }
 
     /**

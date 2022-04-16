@@ -20,6 +20,7 @@ class MyApplication: Application() {
         var firebaseStorage: FirebaseStorage? = null    // firebase storage
         var firestore: FirebaseFirestore? = null    // firebase store(db)
         var userUid: String? = null // current user's uid
+        var userId: String? = null  // current user's id(email)
 
         fun getInstance(): MyApplication {
             return mInstance

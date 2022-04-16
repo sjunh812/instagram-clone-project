@@ -7,13 +7,15 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import org.sjhstudio.instagramclone.MyApplication.Companion.firebaseStorage
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
+import org.sjhstudio.instagramclone.MyApplication.Companion.userId
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
 
 class PhotoContentRepository {
 
     var allRegistration: ListenerRegistration? = null   // getAll()에 대한 snapshotListener의 registration
-    var uidRegistration: ListenerRegistration? = null   // getAllWhereUid()에 대한 snapshotListenr의 registration
+    var uidRegistration: ListenerRegistration? = null   // getAllWhereUid()에 대한 snapshotListener의 registration
+    var commentRegistration: ListenerRegistration? = null   // getAllComment()에 대한 snapshotListener의 registration
 
     fun getAll(snapshotListener: EventListener<QuerySnapshot>){
         allRegistration = firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener(snapshotListener)
@@ -23,12 +25,32 @@ class PhotoContentRepository {
         uidRegistration = firestore?.collection("images")?.whereEqualTo("uid", uid)?.addSnapshotListener(snapshotListener)
     }
 
+    fun getAllComment(contentUid: String, snapshotListener: EventListener<QuerySnapshot>) {
+        commentRegistration = firestore?.collection("images")
+            ?.document(contentUid)
+            ?.collection("comments")
+            ?.orderBy("timestamp")
+            ?.addSnapshotListener(snapshotListener)
+    }
+
     fun insert(fileName: String, uri: Uri, successListener: OnSuccessListener<Uri>) {
         val storageRef = firebaseStorage?.reference?.child("images")?.child(fileName)
 
         storageRef?.putFile(uri)?.continueWithTask {
             return@continueWithTask storageRef.downloadUrl
         }?.addOnSuccessListener(successListener)
+    }
+
+    fun insertComment(contentUid: String, comment: String) {
+        val commentDTO = PhotoContentDTO.Comment(
+            userUid,
+            userId,
+            comment,
+            System.currentTimeMillis()
+        )
+        firestore?.collection("images")?.document(contentUid)
+            ?.collection("comments")?.document()
+            ?.set(commentDTO)
     }
 
     fun updateFavorite(uid: String) {

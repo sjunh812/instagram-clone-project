@@ -1,5 +1,6 @@
 package org.sjhstudio.instagramclone.model
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -20,6 +21,6 @@ data class PhotoContentDTO(
         var uid: String? = null,
         var userId: String? = null,
         var comment: String? = null,
-        var timeStamp: String? = null
+        var timestamp: Long? = null
     )
 }

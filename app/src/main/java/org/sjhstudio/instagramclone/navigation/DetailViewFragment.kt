@@ -21,6 +21,18 @@ class DetailViewFragment: Fragment() {
     private val photoContentVm: PhotoContentViewModel by activityViewModels()
     private val profileVm: ProfileViewModel by activityViewModels()
 
+    override fun onStop() {
+        super.onStop()
+        photoContentVm.remove()
+        profileVm.remove()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        photoContentVm.getAll()
+        profileVm.getAll()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,12 +44,12 @@ class DetailViewFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUI()
+        setUi()
         observePhotoContent()
         observeProfiles()
     }
 
-    private fun setUI() {
+    private fun setUi() {
         detailViewAdapter = DetailViewAdapter(requireContext())
             .apply {
                 setHasStableIds(true)
@@ -53,23 +65,22 @@ class DetailViewFragment: Fragment() {
             adapter = detailViewAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-
-        photoContentVm.getAll()
-        profileVm.getAll()
     }
 
     private fun observePhotoContent() {
         photoContentVm.contentLiveData.observe(viewLifecycleOwner) { items ->
-            println("xxx observePhotoContent() from DetailViewFragment")
+            println("xxx observePhotoContent(contentLiveData) from DetailViewFragment")
             if(items.isNotEmpty()) {
-                val uIds = arrayListOf<String>()
-
-                for(item in items) {
-                    item.uid?.let { uIds.add(it) }
+                detailViewAdapter.apply {
+                    contents = items.reversed()
+                    notifyDataSetChanged()
                 }
-
-                detailViewAdapter.contents = items.reversed()
-                detailViewAdapter.notifyDataSetChanged()
+            }
+        }
+        photoContentVm.contentIdLiveData.observe(viewLifecycleOwner) { items ->
+            println("xxx observePhotoContent(contentIdLiveData) from DetailViewFragment")
+            if(items.isNotEmpty()) {
+                detailViewAdapter.contentUids = items.reversed()
             }
         }
     }

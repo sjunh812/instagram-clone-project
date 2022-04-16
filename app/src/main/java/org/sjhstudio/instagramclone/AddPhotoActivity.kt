@@ -58,7 +58,6 @@ class AddPhotoActivity : BaseActivity() {
         // Upload file
         photoUri?.let { uri ->
             val contentDTO = PhotoContentDTO().apply {
-                this.imgUrl = uri.toString()
                 this.uid = MyApplication.auth?.currentUser?.uid
                 this.userId = MyApplication.auth?.currentUser?.email
                 this.explain = binding.addPhotoEt.text.toString()
