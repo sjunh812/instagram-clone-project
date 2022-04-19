@@ -66,7 +66,10 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
             binding.commentImg.setOnClickListener {
                 // 댓글
                 val intent = Intent(context, CommentActivity::class.java)
-                    .apply { putExtra("contentUid", contentUids[adapterPosition]) }
+                    .apply {
+                        putExtra("contentUid", contentUids[adapterPosition])
+                        putExtra("destinationUid", contents[adapterPosition].uid)
+                    }
                 context.startActivity(intent)
             }
         }

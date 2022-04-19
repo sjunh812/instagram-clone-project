@@ -116,8 +116,8 @@ class PhotoContentViewModel: ViewModel() {
     /**
      * Write comment
      */
-    fun insertComment(contentUid: String, comment: String) {
-        contentRepository.insertComment(contentUid, comment)
+    fun insertComment(contentUid: String, destinationUid: String, comment: String) {
+        contentRepository.insertComment(contentUid, destinationUid, comment)
     }
 
     /**
@@ -125,6 +125,20 @@ class PhotoContentViewModel: ViewModel() {
      */
     fun updateFavorite(uid: String) {
         contentRepository.updateFavorite(uid)
+    }
+
+    /**
+     * Notice favorite(alarm)
+     */
+    fun noticeFavorite(destinationUid: String) {
+        contentRepository.noticeFavorite(destinationUid)
+    }
+
+    /**
+     * Notice comment(alarm)
+     */
+    fun noticeComment(destinationUid: String, message: String) {
+        contentRepository.noticeComment(destinationUid, message)
     }
 
     /**

@@ -20,6 +20,7 @@ class CommentActivity : BaseActivity() {
     private lateinit var commentAdapter: CommentAdapter
 
     private var contentUid: String? = null
+    private var destinationUid: String? = null
 
     override fun onStop() {
         super.onStop()
@@ -33,8 +34,10 @@ class CommentActivity : BaseActivity() {
         photoContentVm = ViewModelProvider(this)[PhotoContentViewModel::class.java]
         profileVm = ViewModelProvider(this)[ProfileViewModel::class.java]
         contentUid = intent.getStringExtra("contentUid")
+        destinationUid = intent.getStringExtra("destinationUid")
 
         println("xxx contentUid : $contentUid")
+        println("xxx destinationUid: $destinationUid")
 
         setUi()
         observeComments()
@@ -48,7 +51,7 @@ class CommentActivity : BaseActivity() {
 
         binding.sendBtn.setOnClickListener {
             contentUid?.let { contentUid ->
-                photoContentVm.insertComment(contentUid, binding.commentEt.text.toString())
+                photoContentVm.insertComment(contentUid, destinationUid!!, binding.commentEt.text.toString())
                 binding.commentEt.setText("")
             }
         }

@@ -9,6 +9,7 @@ import org.sjhstudio.instagramclone.MyApplication.Companion.firebaseStorage
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
 import org.sjhstudio.instagramclone.MyApplication.Companion.userId
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
+import org.sjhstudio.instagramclone.model.AlarmDTO
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
 
 class PhotoContentRepository {
@@ -41,7 +42,7 @@ class PhotoContentRepository {
         }?.addOnSuccessListener(successListener)
     }
 
-    fun insertComment(contentUid: String, comment: String) {
+    fun insertComment(contentUid: String, destinationUid: String, comment: String) {
         val commentDTO = PhotoContentDTO.Comment(
             userUid,
             userId,
@@ -51,6 +52,7 @@ class PhotoContentRepository {
         firestore?.collection("images")?.document(contentUid)
             ?.collection("comments")?.document()
             ?.set(commentDTO)
+        noticeComment(destinationUid, comment)
     }
 
     fun updateFavorite(uid: String) {
@@ -69,6 +71,7 @@ class PhotoContentRepository {
                         // 좋아요가 눌려있지않은 상황
                         dto.favoriteCount = dto.favoriteCount+1
                         dto.favorites[userUid!!] = true
+                        noticeFavorite(dto.uid!!)
                     }
 
                     transition.set(dr, dto)
@@ -76,6 +79,36 @@ class PhotoContentRepository {
             }
         }?.addOnSuccessListener {
             println("xxx updateFavorite() : success!!")
+        }
+    }
+
+    fun noticeFavorite(destinationUid: String) {
+        if(destinationUid != userUid) {
+            val alarmDTO = AlarmDTO(
+                destinationUid,
+                userId,
+                userUid,
+                0,
+                null,
+                System.currentTimeMillis()
+            )
+
+            firestore?.collection("alarms")?.document()?.set(alarmDTO)
+        }
+    }
+
+    fun noticeComment(destinationUid: String, message: String) {
+        if(destinationUid != userUid) {
+            val alarmDTO = AlarmDTO(
+                destinationUid,
+                userId,
+                userUid,
+                null,
+                message,
+                System.currentTimeMillis()
+            )
+
+            firestore?.collection("alarms")?.document()?.set(alarmDTO)
         }
     }
 

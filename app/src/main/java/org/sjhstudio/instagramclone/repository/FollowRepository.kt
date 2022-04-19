@@ -3,8 +3,10 @@ package org.sjhstudio.instagramclone.repository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ListenerRegistration
+import org.sjhstudio.instagramclone.MyApplication
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
+import org.sjhstudio.instagramclone.model.AlarmDTO
 import org.sjhstudio.instagramclone.model.FollowDTO
 
 class FollowRepository {
@@ -62,6 +64,7 @@ class FollowRepository {
                     followDTO = FollowDTO().apply {
                         followerCount = 1
                         followers[userUid!!] = true
+                        noticeFollow(uid)
                     }
                 } else {
                     if(followDTO!!.followers.containsKey(userUid)) {
@@ -72,6 +75,7 @@ class FollowRepository {
                         // do follow
                         followDTO!!.followerCount = followDTO!!.followerCount+1
                         followDTO!!.followers[userUid!!] = true
+                        noticeFollow(uid)
                     }
                 }
 
@@ -79,6 +83,21 @@ class FollowRepository {
             }
         }?.addOnSuccessListener {
             println("xxx updateFollow(follower) : success!!")
+        }
+    }
+
+    fun noticeFollow(destinationUid: String) {
+        if(destinationUid != userUid) {
+            val alarmDTO = AlarmDTO(
+                destinationUid,
+                MyApplication.userId,
+                userUid,
+                2,
+                null,
+                System.currentTimeMillis()
+            )
+
+            firestore?.collection("alarms")?.document()?.set(alarmDTO)
         }
     }
 
