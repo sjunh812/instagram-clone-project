@@ -11,6 +11,7 @@ import org.sjhstudio.instagramclone.MyApplication.Companion.userId
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.model.AlarmDTO
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
+import org.sjhstudio.instagramclone.util.Val
 
 class PhotoContentRepository {
 
@@ -88,7 +89,7 @@ class PhotoContentRepository {
                 destinationUid,
                 userId,
                 userUid,
-                0,
+                Val.ALARM_FAVORITE,
                 null,
                 System.currentTimeMillis()
             )
@@ -103,7 +104,7 @@ class PhotoContentRepository {
                 destinationUid,
                 userId,
                 userUid,
-                null,
+                Val.ALARM_COMMENT,
                 message,
                 System.currentTimeMillis()
             )

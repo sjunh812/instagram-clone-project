@@ -17,6 +17,7 @@ import org.sjhstudio.instagramclone.navigation.AlarmFragment
 import org.sjhstudio.instagramclone.navigation.DetailViewFragment
 import org.sjhstudio.instagramclone.navigation.GridFragment
 import org.sjhstudio.instagramclone.navigation.UserFragment
+import org.sjhstudio.instagramclone.viewmodel.AlarmViewModel
 import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
 import org.sjhstudio.instagramclone.viewmodel.ProfileViewModel
 
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val photoContentVM: PhotoContentViewModel by viewModels()
     private val profileVm: ProfileViewModel by viewModels()
+    private val alarmsVm: AlarmViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +102,12 @@ class MainActivity : AppCompatActivity() {
         }
         binding.bottomNavigation.selectedItemId = R.id.action_home
     }
+
+//    fun observeAlarms() {
+//        alarmsVm.alarmsLiveData.observe(this) {
+//
+//        }
+//    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

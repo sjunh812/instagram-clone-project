@@ -8,6 +8,7 @@ import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.model.AlarmDTO
 import org.sjhstudio.instagramclone.model.FollowDTO
+import org.sjhstudio.instagramclone.util.Val
 
 class FollowRepository {
 
@@ -92,7 +93,7 @@ class FollowRepository {
                 destinationUid,
                 MyApplication.userId,
                 userUid,
-                2,
+                Val.ALARM_FOLLOW,
                 null,
                 System.currentTimeMillis()
             )
