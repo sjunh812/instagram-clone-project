@@ -3,6 +3,7 @@ package org.sjhstudio.instagramclone.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.ListenerRegistration
 import org.sjhstudio.instagramclone.model.AlarmDTO
 import org.sjhstudio.instagramclone.repository.AlarmRepository
 
@@ -13,6 +14,10 @@ class AlarmViewModel: ViewModel() {
     private var _alarmsLiveData = MutableLiveData<List<AlarmDTO>>()
     val alarmsLiveData: LiveData<List<AlarmDTO>>
         get() = _alarmsLiveData
+
+    fun remove() {
+        alarmRepository.remove()
+    }
 
     fun getAll(destinationUid: String) {
         alarmRepository.getAll(destinationUid) { querySnapshot, _ ->

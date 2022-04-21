@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -26,8 +28,14 @@ class CommentAdapter(private val context: Context): RecyclerView.Adapter<Comment
                 .load(profileUrl ?: R.drawable.ic_profile)
                 .apply(RequestOptions().circleCrop())
                 .into(binding.profileImg)
-            binding.userIdTv.text = data.userId
-            binding.commentTv.text = data.comment
+
+            val fontColor = Integer.toHexString(ContextCompat.getColor(context, R.color.black)).removeRange(0,2)
+            val content = HtmlCompat.fromHtml(
+                "<font color=#${fontColor}><b>${data.userId} </b></font>" +
+                        "<font color=#${fontColor}>${data.comment}</cont>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+            binding.contentTv.text = content
         }
 
     }

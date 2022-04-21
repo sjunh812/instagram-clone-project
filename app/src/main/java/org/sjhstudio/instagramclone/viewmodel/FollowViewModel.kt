@@ -41,13 +41,6 @@ class FollowViewModel: ViewModel() {
     }
 
     /**
-     * Notice follow(alarm)
-     */
-    fun noticeFollow(destinationUid: String) {
-        followRepository.noticeFollow(destinationUid)
-    }
-
-    /**
      * Remove listener registration
      */
     fun remove() {

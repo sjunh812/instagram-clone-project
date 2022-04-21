@@ -128,20 +128,6 @@ class PhotoContentViewModel: ViewModel() {
     }
 
     /**
-     * Notice favorite(alarm)
-     */
-    fun noticeFavorite(destinationUid: String) {
-        contentRepository.noticeFavorite(destinationUid)
-    }
-
-    /**
-     * Notice comment(alarm)
-     */
-    fun noticeComment(destinationUid: String, message: String) {
-        contentRepository.noticeComment(destinationUid, message)
-    }
-
-    /**
      * Remove listener registration
      */
     fun remove() {

@@ -3,19 +3,19 @@ package org.sjhstudio.instagramclone.repository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ListenerRegistration
-import org.sjhstudio.instagramclone.MyApplication
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
-import org.sjhstudio.instagramclone.model.AlarmDTO
 import org.sjhstudio.instagramclone.model.FollowDTO
-import org.sjhstudio.instagramclone.util.Val
 
 class FollowRepository {
 
+    private val alarmRepository = AlarmRepository()
     var registration: ListenerRegistration? = null
 
     fun getAllWhereUid(uid: String, snapshotListener: EventListener<DocumentSnapshot>) {
-        registration = firestore?.collection("users")?.document(uid)?.addSnapshotListener(snapshotListener)
+        registration = firestore?.collection("users")
+            ?.document(uid)
+            ?.addSnapshotListener(snapshotListener)
     }
 
     fun remove() {
@@ -65,7 +65,7 @@ class FollowRepository {
                     followDTO = FollowDTO().apply {
                         followerCount = 1
                         followers[userUid!!] = true
-                        noticeFollow(uid)
+                        alarmRepository.noticeFollow(uid)
                     }
                 } else {
                     if(followDTO!!.followers.containsKey(userUid)) {
@@ -76,7 +76,7 @@ class FollowRepository {
                         // do follow
                         followDTO!!.followerCount = followDTO!!.followerCount+1
                         followDTO!!.followers[userUid!!] = true
-                        noticeFollow(uid)
+                        alarmRepository.noticeFollow(uid)
                     }
                 }
 
@@ -87,19 +87,19 @@ class FollowRepository {
         }
     }
 
-    fun noticeFollow(destinationUid: String) {
-        if(destinationUid != userUid) {
-            val alarmDTO = AlarmDTO(
-                destinationUid,
-                MyApplication.userId,
-                userUid,
-                Val.ALARM_FOLLOW,
-                null,
-                System.currentTimeMillis()
-            )
-
-            firestore?.collection("alarms")?.document()?.set(alarmDTO)
-        }
-    }
+//    fun noticeFollow(destinationUid: String) {
+//        if(destinationUid != userUid) {
+//            val alarmDTO = AlarmDTO(
+//                destinationUid,
+//                MyApplication.userId,
+//                userUid,
+//                Val.ALARM_FOLLOW,
+//                null,
+//                System.currentTimeMillis()
+//            )
+//
+//            firestore?.collection("alarms")?.document()?.set(alarmDTO)
+//        }
+//    }
 
 }

@@ -24,9 +24,9 @@ import org.sjhstudio.instagramclone.viewmodel.ProfileViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val photoContentVM: PhotoContentViewModel by viewModels()
-    private val profileVm: ProfileViewModel by viewModels()
-    private val alarmsVm: AlarmViewModel by viewModels()
+//    private val photoContentVM: PhotoContentViewModel by viewModels()
+//    private val profileVm: ProfileViewModel by viewModels()
+//    private val alarmsVm: AlarmViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,12 +103,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.selectedItemId = R.id.action_home
     }
 
-//    fun observeAlarms() {
-//        alarmsVm.alarmsLiveData.observe(this) {
-//
-//        }
-//    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -131,4 +125,5 @@ class MainActivity : AppCompatActivity() {
         if(ar.resultCode == RESULT_OK) Snackbar.make(binding.toolbar, getString(R.string.upload_success), 1000).show()
         else Snackbar.make(binding.toolbar, getString(R.string.upload_fail), 1500).show()
     }
+
 }

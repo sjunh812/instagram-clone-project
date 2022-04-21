@@ -9,22 +9,25 @@ import org.sjhstudio.instagramclone.MyApplication.Companion.firebaseStorage
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
 import org.sjhstudio.instagramclone.MyApplication.Companion.userId
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
-import org.sjhstudio.instagramclone.model.AlarmDTO
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
-import org.sjhstudio.instagramclone.util.Val
 
 class PhotoContentRepository {
 
+    private val alarmRepository = AlarmRepository()
     var allRegistration: ListenerRegistration? = null   // getAll()에 대한 snapshotListener의 registration
     var uidRegistration: ListenerRegistration? = null   // getAllWhereUid()에 대한 snapshotListener의 registration
     var commentRegistration: ListenerRegistration? = null   // getAllComment()에 대한 snapshotListener의 registration
 
     fun getAll(snapshotListener: EventListener<QuerySnapshot>){
-        allRegistration = firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener(snapshotListener)
+        allRegistration = firestore?.collection("images")
+            ?.orderBy("timestamp")
+            ?.addSnapshotListener(snapshotListener)
     }
 
     fun getAllWhereUid(uid: String, snapshotListener: EventListener<QuerySnapshot>) {
-        uidRegistration = firestore?.collection("images")?.whereEqualTo("uid", uid)?.addSnapshotListener(snapshotListener)
+        uidRegistration = firestore?.collection("images")
+            ?.whereEqualTo("uid", uid)
+            ?.addSnapshotListener(snapshotListener)
     }
 
     fun getAllComment(contentUid: String, snapshotListener: EventListener<QuerySnapshot>) {
@@ -53,7 +56,7 @@ class PhotoContentRepository {
         firestore?.collection("images")?.document(contentUid)
             ?.collection("comments")?.document()
             ?.set(commentDTO)
-        noticeComment(destinationUid, comment)
+        alarmRepository.noticeComment(destinationUid, comment)
     }
 
     fun updateFavorite(uid: String) {
@@ -72,7 +75,7 @@ class PhotoContentRepository {
                         // 좋아요가 눌려있지않은 상황
                         dto.favoriteCount = dto.favoriteCount+1
                         dto.favorites[userUid!!] = true
-                        noticeFavorite(dto.uid!!)
+                        alarmRepository.noticeFavorite(dto.uid!!)
                     }
 
                     transition.set(dr, dto)
@@ -83,35 +86,35 @@ class PhotoContentRepository {
         }
     }
 
-    fun noticeFavorite(destinationUid: String) {
-        if(destinationUid != userUid) {
-            val alarmDTO = AlarmDTO(
-                destinationUid,
-                userId,
-                userUid,
-                Val.ALARM_FAVORITE,
-                null,
-                System.currentTimeMillis()
-            )
-
-            firestore?.collection("alarms")?.document()?.set(alarmDTO)
-        }
-    }
-
-    fun noticeComment(destinationUid: String, message: String) {
-        if(destinationUid != userUid) {
-            val alarmDTO = AlarmDTO(
-                destinationUid,
-                userId,
-                userUid,
-                Val.ALARM_COMMENT,
-                message,
-                System.currentTimeMillis()
-            )
-
-            firestore?.collection("alarms")?.document()?.set(alarmDTO)
-        }
-    }
+//    fun noticeFavorite(destinationUid: String) {
+//        if(destinationUid != userUid) {
+//            val alarmDTO = AlarmDTO(
+//                destinationUid,
+//                userId,
+//                userUid,
+//                Val.ALARM_FAVORITE,
+//                null,
+//                System.currentTimeMillis()
+//            )
+//
+//            firestore?.collection("alarms")?.document()?.set(alarmDTO)
+//        }
+//    }
+//
+//    fun noticeComment(destinationUid: String, message: String) {
+//        if(destinationUid != userUid) {
+//            val alarmDTO = AlarmDTO(
+//                destinationUid,
+//                userId,
+//                userUid,
+//                Val.ALARM_COMMENT,
+//                message,
+//                System.currentTimeMillis()
+//            )
+//
+//            firestore?.collection("alarms")?.document()?.set(alarmDTO)
+//        }
+//    }
 
     fun remove() {
         // query에 대한 listener registration 제거
