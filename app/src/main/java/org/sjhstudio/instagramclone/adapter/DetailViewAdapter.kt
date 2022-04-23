@@ -17,17 +17,18 @@ import org.sjhstudio.instagramclone.OtherUserFragment
 import org.sjhstudio.instagramclone.R
 import org.sjhstudio.instagramclone.databinding.ItemDetailBinding
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
-import org.sjhstudio.instagramclone.model.ProfileDTO
+import org.sjhstudio.instagramclone.repository.ProfileRepository
 
 interface DetailViewAdapterCallback {
-    fun onClickFavorite(pos: Int)
+    fun onClickFavorite(pos: Int)   // 좋아요 클릭
 }
 
 class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAdapter.ViewHolder>() {
 
     var contents = listOf<PhotoContentDTO>()
     var contentUids = listOf<String>()
-    var profiles = listOf<ProfileDTO>()
+    val profileRepository = ProfileRepository()
+
     private var callback: DetailViewAdapterCallback?= null
 
     fun setDetailViewAdapterCallback(callback: DetailViewAdapterCallback) {
@@ -43,6 +44,7 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
                 // 좋아요버튼
                 callback?.onClickFavorite(adapterPosition)
             }
+
             binding.profileImg.setOnClickListener {
                 // 프로필이미지
                 val contentDTO = contents[adapterPosition]
@@ -63,6 +65,7 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
                         .commit()
                 }
             }
+
             binding.commentImg.setOnClickListener {
                 // 댓글
                 val intent = Intent(context, CommentActivity::class.java)
@@ -75,14 +78,23 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
         }
 
         @SuppressLint("SetTextI18n")
-        fun setBind(item: PhotoContentDTO, url: String?) {
-            Glide.with(context)
-                .load(url ?: R.drawable.ic_profile)
-                .apply(RequestOptions().circleCrop())
-                .into(binding.profileImg)
+        fun setBind(item: PhotoContentDTO) {
+            // Uid 를 이용해 profile 적용.
+            profileRepository.getAllWhereUid(item.uid!!) { documentSnapshot, _ ->
+                documentSnapshot?.let { ds ->
+                    val url = ds.data?.get("images")
+                    Glide.with(context)
+                        .load(url ?: R.drawable.ic_profile)
+                        .apply(RequestOptions().circleCrop())
+                        .into(binding.profileImg)
+                }
+            }
+
+            // 사진(게시물)
             Glide.with(context)
                 .load(item.imgUrl)
                 .into(binding.photoContentImg)
+
             binding.profileTv.text = item.userId
             binding.favoriteTv.text = "좋아요 ${item.favoriteCount}개"
             binding.explainTv.text = item.explain
@@ -103,14 +115,14 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val content = contents[position]
 
-        profiles.forEach {
-            if(it.uid == content.uid) {
-                holder.setBind(contents[position], it.photoUri)
-                return
-            }
-        }
+//        profiles.forEach {
+//            if(it.uid == content.uid) {
+//                holder.setBind(contents[position], it.photoUri)
+//                return
+//            }
+//        }
 
-        holder.setBind(contents[position], null)
+        holder.setBind(contents[position])
     }
 
     override fun getItemCount(): Int {
@@ -118,7 +130,7 @@ class DetailViewAdapter(val context: Context): RecyclerView.Adapter<DetailViewAd
     }
 
     override fun getItemId(position: Int): Long {
-        return contents[position].timestamp ?: 0
+        return contents[position].timestamp ?: position.toLong()
     }
 
 }

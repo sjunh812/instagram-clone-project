@@ -14,12 +14,13 @@ import org.sjhstudio.instagramclone.R
 import org.sjhstudio.instagramclone.databinding.ItemCommentBinding
 import org.sjhstudio.instagramclone.model.AlarmDTO
 import org.sjhstudio.instagramclone.model.ProfileDTO
+import org.sjhstudio.instagramclone.repository.ProfileRepository
 import org.sjhstudio.instagramclone.util.Val
 
 class AlarmAdapter(private val context: Context): RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {
 
     var alarms: ArrayList<AlarmDTO> = arrayListOf()
-    var profile: ProfileDTO? = null
+    val profileRepository = ProfileRepository()
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
@@ -27,11 +28,15 @@ class AlarmAdapter(private val context: Context): RecyclerView.Adapter<AlarmAdap
 
         @SuppressLint("SetTextI18n")
         fun setBind(alarm: AlarmDTO) {
-            profile?.let {
-                Glide.with(context)
-                    .load(if(it.uid == alarm.uid) profile!!.photoUri else R.drawable.ic_profile)
-                    .apply(RequestOptions().circleCrop())
-                    .into(binding.profileImg)
+            profileRepository.getAllWhereUid(alarm.uid!!) { documentSnapshot, _ ->
+                documentSnapshot?.let { ds ->
+                    val url = ds.data?.get("images")
+                    Glide.with(context)
+                        .load(url ?: R.drawable.ic_profile)
+                        .apply(RequestOptions().circleCrop())
+                        .into(binding.profileImg)
+                }
+
             }
 
             val fontColor = Integer.toHexString(ContextCompat.getColor(context, R.color.black)).removeRange(0,2)

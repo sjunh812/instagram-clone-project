@@ -11,7 +11,6 @@ import org.sjhstudio.instagramclone.adapter.DetailViewAdapter
 import org.sjhstudio.instagramclone.adapter.DetailViewAdapterCallback
 import org.sjhstudio.instagramclone.databinding.FragmentDetailViewBinding
 import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
-import org.sjhstudio.instagramclone.viewmodel.ProfileViewModel
 
 class DetailViewFragment: Fragment() {
 
@@ -19,18 +18,16 @@ class DetailViewFragment: Fragment() {
     private lateinit var detailViewAdapter: DetailViewAdapter
 
     private val photoContentVm: PhotoContentViewModel by activityViewModels()
-    private val profileVm: ProfileViewModel by activityViewModels()
 
     override fun onStop() {
         super.onStop()
         photoContentVm.remove()
-        profileVm.remove()
+        detailViewAdapter.profileRepository.remove()
     }
 
     override fun onResume() {
         super.onResume()
         photoContentVm.getAll()
-        profileVm.getAll()
     }
 
     override fun onCreateView(
@@ -46,7 +43,6 @@ class DetailViewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUi()
         observePhotoContent()
-        observeProfiles()
     }
 
     private fun setUi() {
@@ -61,6 +57,7 @@ class DetailViewFragment: Fragment() {
                     }
                 })
             }
+
         binding.detailRv.apply {
             adapter = detailViewAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -77,20 +74,11 @@ class DetailViewFragment: Fragment() {
                 }
             }
         }
+
         photoContentVm.contentIdLiveData.observe(viewLifecycleOwner) { items ->
             println("xxx observePhotoContent(contentIdLiveData) from DetailViewFragment")
             if(items.isNotEmpty()) {
                 detailViewAdapter.contentUids = items.reversed()
-            }
-        }
-    }
-
-    private fun observeProfiles() {
-        profileVm.profilesLiveData.observe(viewLifecycleOwner) {
-            println("xxx observeProfile() from DetailViewFragment")
-            if(it.isNotEmpty()) {
-                detailViewAdapter.profiles = it
-                detailViewAdapter.notifyDataSetChanged()
             }
         }
     }

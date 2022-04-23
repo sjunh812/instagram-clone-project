@@ -15,7 +15,6 @@ class CommentActivity : BaseActivity() {
 
     private lateinit var binding: ActivityCommentBinding
     private lateinit var photoContentVm: PhotoContentViewModel
-    private lateinit var profileVm: ProfileViewModel
 
     private lateinit var commentAdapter: CommentAdapter
 
@@ -25,14 +24,13 @@ class CommentActivity : BaseActivity() {
     override fun onStop() {
         super.onStop()
         photoContentVm.remove()
-        profileVm.remove()
+        commentAdapter.profileRepository.remove()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_comment)
         photoContentVm = ViewModelProvider(this)[PhotoContentViewModel::class.java]
-        profileVm = ViewModelProvider(this)[ProfileViewModel::class.java]
         contentUid = intent.getStringExtra("contentUid")
         destinationUid = intent.getStringExtra("destinationUid")
 
@@ -41,7 +39,6 @@ class CommentActivity : BaseActivity() {
 
         setUi()
         observeComments()
-        observeProfile()
     }
 
     private fun setUi() {
@@ -73,30 +70,9 @@ class CommentActivity : BaseActivity() {
         photoContentVm.commentLiveData.observe(this) { items ->
             if(items.isNotEmpty()) {
                 commentAdapter.comments = items as ArrayList<PhotoContentDTO.Comment>
-                items.forEach { comment ->
-                    comment.uid?.let { uid -> profileVm.getAllWhereUid(uid) }
-                }
                 commentAdapter.notifyDataSetChanged()
             }
         }
     }
-
-    private fun observeProfile() {
-        println("xxx observeProfile() from CommentActivity")
-        profileVm.profileLiveData.observe(this) { item ->
-            commentAdapter.profiles.add(item)
-            commentAdapter.notifyDataSetChanged()
-        }
-    }
-
-//    private fun observeProfiles() {
-//        println("xxx observeProfiles() from CommentActivity")
-//        profileVm.profilesLiveData.observe(this) { items ->
-//            if(items.isNotEmpty()) {
-//                commentAdapter.profiles = items as ArrayList<ProfileDTO>
-//                commentAdapter.notifyDataSetChanged()
-//            }
-//        }
-//    }
 
 }

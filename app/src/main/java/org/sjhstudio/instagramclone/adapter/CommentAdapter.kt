@@ -12,22 +12,27 @@ import com.bumptech.glide.request.RequestOptions
 import org.sjhstudio.instagramclone.R
 import org.sjhstudio.instagramclone.databinding.ItemCommentBinding
 import org.sjhstudio.instagramclone.model.PhotoContentDTO
-import org.sjhstudio.instagramclone.model.ProfileDTO
+import org.sjhstudio.instagramclone.repository.ProfileRepository
 
 class CommentAdapter(private val context: Context): RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
 
     var comments: ArrayList<PhotoContentDTO.Comment> = arrayListOf()
-    var profiles: ArrayList<ProfileDTO> = arrayListOf()
+    val profileRepository = ProfileRepository()
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         private val binding = ItemCommentBinding.bind(itemView)
 
         fun setBind(data: PhotoContentDTO.Comment, profileUrl: String?) {
-            Glide.with(context)
-                .load(profileUrl ?: R.drawable.ic_profile)
-                .apply(RequestOptions().circleCrop())
-                .into(binding.profileImg)
+            profileRepository.getAllWhereUid(data.uid!!) { documentSnapshot, _ ->
+                documentSnapshot?.let { ds ->
+                    val url = ds.data?.get("images")
+                    Glide.with(context)
+                        .load(url ?: R.drawable.ic_profile)
+                        .apply(RequestOptions().circleCrop())
+                        .into(binding.profileImg)
+                }
+            }
 
             val fontColor = Integer.toHexString(ContextCompat.getColor(context, R.color.black)).removeRange(0,2)
             val content = HtmlCompat.fromHtml(
@@ -48,16 +53,7 @@ class CommentAdapter(private val context: Context): RecyclerView.Adapter<Comment
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val comment = comments[position]
-
-        profiles.forEach {
-            if(it.uid == comment.uid) {
-                holder.setBind(comment, it.photoUri)
-                return
-            }
-        }
-
-        holder.setBind(comment, null)
+        holder.setBind(comments[position], null)
     }
 
     override fun getItemCount(): Int {
