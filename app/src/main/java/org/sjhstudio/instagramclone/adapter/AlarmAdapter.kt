@@ -8,14 +8,18 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import org.sjhstudio.instagramclone.R
 import org.sjhstudio.instagramclone.databinding.ItemCommentBinding
 import org.sjhstudio.instagramclone.model.AlarmDTO
+import org.sjhstudio.instagramclone.model.ProfileDTO
 import org.sjhstudio.instagramclone.util.Val
 
 class AlarmAdapter(private val context: Context): RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {
 
     var alarms: ArrayList<AlarmDTO> = arrayListOf()
+    var profile: ProfileDTO? = null
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
@@ -23,6 +27,13 @@ class AlarmAdapter(private val context: Context): RecyclerView.Adapter<AlarmAdap
 
         @SuppressLint("SetTextI18n")
         fun setBind(alarm: AlarmDTO) {
+            profile?.let {
+                Glide.with(context)
+                    .load(if(it.uid == alarm.uid) profile!!.photoUri else R.drawable.ic_profile)
+                    .apply(RequestOptions().circleCrop())
+                    .into(binding.profileImg)
+            }
+
             val fontColor = Integer.toHexString(ContextCompat.getColor(context, R.color.black)).removeRange(0,2)
 
             when(alarm.kind) {

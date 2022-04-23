@@ -19,7 +19,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.messaging.FirebaseMessaging
 import org.sjhstudio.instagramclone.MyApplication.Companion.auth
+import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
+import org.sjhstudio.instagramclone.MyApplication.Companion.userId
+import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.databinding.ActivityLoginBinding
 import org.sjhstudio.instagramclone.util.BaseActivity
 import java.lang.Exception
@@ -191,10 +195,32 @@ class LoginActivity: BaseActivity() {
 
     private fun moveMainActivity(user: FirebaseUser?) {
         if(user != null) {
-            MyApplication.userUid = auth?.currentUser?.uid
-            MyApplication.userId = auth?.currentUser?.email
+            userUid = auth?.currentUser?.uid
+            userId = auth?.currentUser?.email
+            requestToken()
             startActivity(Intent(this,MainActivity::class.java))
             finish()
         }
     }
+
+    /**
+     * Request token
+     * (로그인마다 토큰생성 -> Firestore에 저장)
+     */
+    private fun requestToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if(!task.isSuccessful) {
+                println("xxx Failed to request token")
+                return@addOnCompleteListener
+            }
+
+            val token = task.result
+            val map = mutableMapOf<String, Any>()
+            map["pushToken"] = token
+            firestore?.collection("pushtokens")
+                ?.document(userUid!!)
+                ?.set(map)
+        }
+    }
+
 }
