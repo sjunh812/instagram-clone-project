@@ -17,6 +17,7 @@ import org.sjhstudio.instagramclone.navigation.AlarmFragment
 import org.sjhstudio.instagramclone.navigation.DetailViewFragment
 import org.sjhstudio.instagramclone.navigation.GridFragment
 import org.sjhstudio.instagramclone.navigation.UserFragment
+import org.sjhstudio.instagramclone.util.Push
 import org.sjhstudio.instagramclone.viewmodel.AlarmViewModel
 import org.sjhstudio.instagramclone.viewmodel.PhotoContentViewModel
 import org.sjhstudio.instagramclone.viewmodel.ProfileViewModel
@@ -123,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { ar ->
         if(ar.resultCode == RESULT_OK) Snackbar.make(binding.toolbar, getString(R.string.upload_success), 1000).show()
-        else Snackbar.make(binding.toolbar, getString(R.string.upload_fail), 1500).show()
+//        else Snackbar.make(binding.toolbar, getString(R.string.upload_fail), 1500).show()
     }
 
 }

@@ -6,6 +6,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.model.FollowDTO
+import org.sjhstudio.instagramclone.util.Push
 
 class FollowRepository {
 
@@ -86,20 +87,5 @@ class FollowRepository {
             println("xxx updateFollow(follower) : success!!")
         }
     }
-
-//    fun noticeFollow(destinationUid: String) {
-//        if(destinationUid != userUid) {
-//            val alarmDTO = AlarmDTO(
-//                destinationUid,
-//                MyApplication.userId,
-//                userUid,
-//                Val.ALARM_FOLLOW,
-//                null,
-//                System.currentTimeMillis()
-//            )
-//
-//            firestore?.collection("alarms")?.document()?.set(alarmDTO)
-//        }
-//    }
 
 }

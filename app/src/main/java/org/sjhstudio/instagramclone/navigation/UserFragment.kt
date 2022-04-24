@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import org.sjhstudio.instagramclone.LoginActivity
 import org.sjhstudio.instagramclone.MyApplication.Companion.auth
+import org.sjhstudio.instagramclone.MyApplication.Companion.userId
 import org.sjhstudio.instagramclone.MyApplication.Companion.userUid
 import org.sjhstudio.instagramclone.R
 import org.sjhstudio.instagramclone.adapter.AccountPhotoAdapter
@@ -74,6 +75,7 @@ class UserFragment: Fragment() {
 
     private fun setUi() {
         // My page
+        binding.userIdTv.text = userId
         Glide.with(this)
             .load(R.drawable.ic_profile)
             .apply(RequestOptions().circleCrop())

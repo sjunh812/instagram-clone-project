@@ -31,6 +31,10 @@ class AddPhotoActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_photo)
 
+        binding.toolbarBackBtn.setOnClickListener {
+            finish()
+        }
+
         // Open the Album or Add photo
         binding.addPhotoBtn.setOnClickListener {
             when(binding.addPhotoBtn.text) {

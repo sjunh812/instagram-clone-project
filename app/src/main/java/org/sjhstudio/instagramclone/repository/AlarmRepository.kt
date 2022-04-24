@@ -5,7 +5,9 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import org.sjhstudio.instagramclone.MyApplication
 import org.sjhstudio.instagramclone.MyApplication.Companion.firestore
+import org.sjhstudio.instagramclone.MyApplication.Companion.userId
 import org.sjhstudio.instagramclone.model.AlarmDTO
+import org.sjhstudio.instagramclone.util.Push
 import org.sjhstudio.instagramclone.util.Val
 
 class AlarmRepository {
@@ -35,6 +37,8 @@ class AlarmRepository {
             )
 
             firestore?.collection("alarms")?.document()?.set(alarmDTO)
+            val message = "$userId 님이 회원님의 스토리를 좋아합니다."
+            Push.sendPush(destinationUid, "Instagram Clone", message)
         }
     }
 
@@ -50,6 +54,8 @@ class AlarmRepository {
             )
 
             firestore?.collection("alarms")?.document()?.set(alarmDTO)
+            val message = "$userId 님이 회원님의 스토리에 댓글을 남겼습니다."
+            Push.sendPush(destinationUid, "Instagram Clone", message)
         }
     }
 
@@ -65,6 +71,8 @@ class AlarmRepository {
             )
 
             firestore?.collection("alarms")?.document()?.set(alarmDTO)
+            val message = "$userId 님이 회원님을 팔로우하기 시작했습니다."
+            Push.sendPush(destinationUid, "Instagram Clone", message)
         }
     }
 

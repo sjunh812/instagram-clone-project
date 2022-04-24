@@ -11,41 +11,49 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            app:contentInsetStart="5dp">
+            android:layout_height="56dp"
+            app:contentInsetStart="0dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
 
                 <ImageView
-                    android:layout_width="150dp"
+                    android:id="@+id/toolbar_back_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_arrow_back" />
+
+                <TextView
+                    android:id="@+id/toolbar_username_tv"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/logo_title" />
+                    android:layout_centerInParent="true"
+                    android:text="게시물 작성"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorNavIcon" />
 
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
-        <View
-            android:id="@+id/toolbar_division"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@id/toolbar"
-            android:background="@color/colorDivision" />
-
         <ImageView
             android:id="@+id/add_photo_img"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_below="@id/toolbar_division"
+            android:layout_below="@id/toolbar"
             android:layout_margin="15dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_photo_et_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/toolbar_division"
+            android:layout_below="@id/toolbar"
             android:layout_toEndOf="@id/add_photo_img"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="15dp"

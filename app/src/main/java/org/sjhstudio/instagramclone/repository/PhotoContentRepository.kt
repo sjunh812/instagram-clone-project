@@ -86,36 +86,6 @@ class PhotoContentRepository {
         }
     }
 
-//    fun noticeFavorite(destinationUid: String) {
-//        if(destinationUid != userUid) {
-//            val alarmDTO = AlarmDTO(
-//                destinationUid,
-//                userId,
-//                userUid,
-//                Val.ALARM_FAVORITE,
-//                null,
-//                System.currentTimeMillis()
-//            )
-//
-//            firestore?.collection("alarms")?.document()?.set(alarmDTO)
-//        }
-//    }
-//
-//    fun noticeComment(destinationUid: String, message: String) {
-//        if(destinationUid != userUid) {
-//            val alarmDTO = AlarmDTO(
-//                destinationUid,
-//                userId,
-//                userUid,
-//                Val.ALARM_COMMENT,
-//                message,
-//                System.currentTimeMillis()
-//            )
-//
-//            firestore?.collection("alarms")?.document()?.set(alarmDTO)
-//        }
-//    }
-
     fun remove() {
         // query에 대한 listener registration 제거
         allRegistration?.remove()
