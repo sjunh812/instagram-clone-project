@@ -1,4 +1,9 @@
 # 📷 [인프런] 인스타그램 클론 앱
+
+인프런 강의 링크
+https://www.inflearn.com/course/%EC%9D%B8%EC%8A%A4%ED%83%80%EA%B7%B8%EB%9E%A8%EB%A7%8C%EB%93%A4%EA%B8%B0-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C
+<br>
+<br>
 ## 📷 스크린샷
 <img src="https://user-images.githubusercontent.com/79048895/168420126-8cbe8801-1f93-4974-b1ac-818ac56ca472.jpg" width="180" height="390" /> <img src="https://user-images.githubusercontent.com/79048895/168420134-b49c2c1e-72e9-4fb5-85b2-4db858c49319.jpg" width="180" height="390" /> <img src="https://user-images.githubusercontent.com/79048895/168420150-9fa8fddd-72fc-472e-ab94-1d6514a5d05e.jpg" width="180" height="390" /> <img src="https://user-images.githubusercontent.com/79048895/168420166-f8254dde-c5d9-4623-bba5-c13e964e1195.jpg" width="180" height="390" />
 <img src="https://user-images.githubusercontent.com/79048895/168420194-9a73cf37-1af0-4c08-83c1-2ad0cc1e1711.jpg" width="180" height="390" />
